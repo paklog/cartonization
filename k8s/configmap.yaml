@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cartonization-config
+  labels:
+    app: cartonization-service
+data:
+  application.yml: |
+    spring:
+      application:
+        name: cartonization-service
+
+      profiles:
+        active: "production"
+
+      data:
+        mongodb:
+          uri: mongodb://cartonization_user:cartonization_pass@mongodb-service:27017/cartonization
+          auto-index-creation: true
+
+      redis:
+        host: redis-service
+        port: 6379
+        timeout: 2000ms
+
+      kafka:
+        bootstrap-servers: kafka-service:9092
+        consumer:
+          group-id: cartonization-service
+          auto-offset-reset: earliest
+        producer:
+          acks: all
+          retries: 3
+
+      cache:
+        type: redis
+        redis:
+          time-to-live: 600000
+
+    kafka:
+      topics:
+        cartonization-requests: cartonization.requests
+        cartonization-solutions: cartonization.solutions
+        cartonization-events: cartonization.events
+
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health,info,metrics,prometheus
+      metrics:
+        export:
+          prometheus:
+            enabled: true
+
+    logging:
+      level:
+        com.paklog.cartonization: INFO
+        org.springframework.data.mongodb.core.MongoTemplate: WARN
+
+    server:
+      port: 8080
+
+    product-catalog:
+      base-url: http://product-catalog-service:8080
+      timeout: 5000
