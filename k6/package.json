@@ -1,0 +1,20 @@
+
+{
+  "name": "k6",
+  "version": "1.0.0",
+  "description": "k6 tests for cartonization service",
+  "main": "load-test.js",
+  "scripts": {
+    "test": "k6 run load-test.js",
+    "stress": "k6 run stress-test.js",
+    "spike": "k6 run spike-test.js"
+  },
+  "keywords": [
+    "k6",
+    "performance",
+    "load",
+    "testing"
+  ],
+  "author": "",
+  "license": "ISC"
+}
