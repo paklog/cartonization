@@ -1,10 +1,9 @@
 package com.paklog.cartonization.domain.model.valueobject;
 
-import lombok.Value;
+import java.util.Objects;
 
-@Value
-public class SKU {
-    String value;
+public final class SKU {
+    private final String value;
 
     public SKU(String value) {
         if (value == null || value.trim().isEmpty()) {
@@ -15,6 +14,23 @@ public class SKU {
 
     public static SKU of(String value) {
         return new SKU(value);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SKU sku = (SKU) o;
+        return Objects.equals(value, sku.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override

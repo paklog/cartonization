@@ -4,17 +4,11 @@ import com.paklog.cartonization.domain.model.aggregate.Carton;
 import com.paklog.cartonization.domain.model.valueobject.ItemWithDimensions;
 import com.paklog.cartonization.domain.model.valueobject.PackingRules;
 import com.paklog.cartonization.domain.model.valueobject.Weight;
-import lombok.Getter;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class Package {
     private final Carton carton;
     private final List<ItemWithDimensions> items;
@@ -79,7 +73,11 @@ public class Package {
     }
 
     public void addItem(ItemWithDimensions item) {
-        if (!canAddItem(item, PackingRules.defaultRules())) {
+        addItem(item, PackingRules.defaultRules());
+    }
+
+    public void addItem(ItemWithDimensions item, PackingRules rules) {
+        if (!canAddItem(item, rules)) {
             throw new IllegalArgumentException("Cannot add item to package: " + item.getSku());
         }
 
@@ -110,5 +108,21 @@ public class Package {
 
     public int getItemCount() {
         return items.stream().mapToInt(ItemWithDimensions::getQuantity).sum();
+    }
+
+    public Carton getCarton() {
+        return carton;
+    }
+
+    public List<ItemWithDimensions> getItems() {
+        return items;
+    }
+
+    public BigDecimal getCurrentWeight() {
+        return currentWeight;
+    }
+
+    public BigDecimal getUsedVolume() {
+        return usedVolume;
     }
 }

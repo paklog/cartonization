@@ -1,0 +1,152 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/v1/products/BOOK-001"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "sku": "BOOK-001",
+        "name": "Programming Book - Java Fundamentals",
+        "category": "Books",
+        "dimensions": {
+          "length": 23.5,
+          "width": 18.5,
+          "height": 3.0,
+          "unit": "CENTIMETERS"
+        },
+        "weight": {
+          "value": 0.8,
+          "unit": "KILOGRAMS"
+        },
+        "fragile": false,
+        "active": true
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/v1/products/SHIRT-XL-BLUE"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "sku": "SHIRT-XL-BLUE",
+        "name": "Men's Blue T-Shirt - XL",
+        "category": "Clothing",
+        "dimensions": {
+          "length": 30.0,
+          "width": 25.0,
+          "height": 2.0,
+          "unit": "CENTIMETERS"
+        },
+        "weight": {
+          "value": 0.2,
+          "unit": "KILOGRAMS"
+        },
+        "fragile": false,
+        "active": true
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/v1/products/LAPTOP-DELL-001"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "sku": "LAPTOP-DELL-001",
+        "name": "Dell Laptop - 15 inch",
+        "category": "Electronics",
+        "dimensions": {
+          "length": 35.0,
+          "width": 25.0,
+          "height": 5.0,
+          "unit": "CENTIMETERS"
+        },
+        "weight": {
+          "value": 2.5,
+          "unit": "KILOGRAMS"
+        },
+        "fragile": true,
+        "active": true
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/v1/products/GLASS-VASE-LARGE"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "sku": "GLASS-VASE-LARGE",
+        "name": "Crystal Glass Vase - Large",
+        "category": "Home & Garden",
+        "dimensions": {
+          "length": 20.0,
+          "width": 20.0,
+          "height": 35.0,
+          "unit": "CENTIMETERS"
+        },
+        "weight": {
+          "value": 1.8,
+          "unit": "KILOGRAMS"
+        },
+        "fragile": true,
+        "active": true
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/v1/products/.*"
+    },
+    "httpResponse": {
+      "statusCode": 404,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "error": "Product not found",
+        "message": "The requested product could not be found in the catalog",
+        "timestamp": "2024-01-15T10:30:00Z"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/health"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "status": "UP",
+        "service": "Product Catalog Mock",
+        "timestamp": "2024-01-15T10:30:00Z"
+      }
+    }
+  }
+]

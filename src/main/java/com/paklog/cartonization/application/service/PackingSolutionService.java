@@ -7,8 +7,8 @@ import com.paklog.cartonization.domain.model.aggregate.Carton;
 import com.paklog.cartonization.domain.model.entity.PackingSolution;
 import com.paklog.cartonization.domain.model.valueobject.*;
 import com.paklog.cartonization.domain.service.PackingAlgorithmService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +18,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 @Transactional
 public class PackingSolutionService implements PackingSolutionUseCase {
 
+    private static final Logger log = LoggerFactory.getLogger(PackingSolutionService.class);
+    
     private final PackingAlgorithmService packingAlgorithmService;
     private final CartonRepository cartonRepository;
+    private final ProductDimensionEnricher productDimensionEnricher;
+    
+    public PackingSolutionService(PackingAlgorithmService packingAlgorithmService, 
+                                CartonRepository cartonRepository,
+                                ProductDimensionEnricher productDimensionEnricher) {
+        this.packingAlgorithmService = packingAlgorithmService;
+        this.cartonRepository = cartonRepository;
+        this.productDimensionEnricher = productDimensionEnricher;
+    }
 
     @Override
     public PackingSolution calculate(CalculatePackingSolutionCommand command) {
@@ -37,9 +46,8 @@ public class PackingSolutionService implements PackingSolutionUseCase {
                 throw new IllegalStateException("No active cartons available");
             }
 
-            // Convert items to enriched format with mock dimensions for now
-            // In a real implementation, this would call the Product Catalog service
-            List<ItemWithDimensions> enrichedItems = enrichItemsWithMockDimensions(command.getItems());
+            // Enrich items with dimensions from product catalog
+            List<ItemWithDimensions> enrichedItems = productDimensionEnricher.enrichItems(command.getItems());
 
             // Build packing rules from command
             PackingRules rules = PackingRules.builder()

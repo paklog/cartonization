@@ -54,6 +54,7 @@ class CartonTest {
     void shouldDeactivateCarton() {
         // Given
         Carton carton = createTestCarton();
+        carton.pullDomainEvents(); // Clear creation events
 
         // When
         carton.deactivate();

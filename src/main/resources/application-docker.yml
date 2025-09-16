@@ -1,0 +1,109 @@
+# Spring Boot configuration for Docker environment
+spring:
+
+  data:
+    mongodb:
+      uri: mongodb://cartonization_user:cartonization_pass@mongodb:27017/cartonization
+      auto-index-creation: false
+
+  redis:
+    host: redis
+    port: 6379
+    password: redis123
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+
+  kafka:
+    bootstrap-servers: kafka:29092
+    consumer:
+      group-id: cartonization-service-docker
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        specific.avro.reader: true
+        isolation.level: read_committed
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+    properties:
+      schema.registry.url: http://schema-registry:8081
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+      cache-null-values: false
+
+# Application configuration
+app:
+  cache:
+    warmup:
+      enabled: true
+      common-skus:
+        - PROD001
+        - PROD002
+        - PROD003
+
+# Integration services
+integration:
+  product-catalog:
+    base-url: http://product-catalog-mock:1080
+
+# Resilience patterns
+resilience4j:
+  circuitbreaker:
+    instances:
+      product-catalog:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+
+# Management and monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+      environment: docker
+
+# Logging
+logging:
+  level:
+    com.paklog.cartonization: INFO
+    org.springframework.data.mongodb.core.MongoTemplate: WARN
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+
+# Server configuration
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+
+# OpenAPI documentation
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha

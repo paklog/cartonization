@@ -8,7 +8,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://cartonization_user:cartonization_pass@localhost:27017/cartonization
-      auto-index-creation: true
+      auto-index-creation: false
 
   redis:
     host: localhost
@@ -46,11 +46,35 @@ spring:
       time-to-live: 600000
       cache-null-values: false
 
-kafka:
-  topics:
-    cartonization-requests: cartonization.requests
-    cartonization-solutions: cartonization.solutions
-    cartonization-events: cartonization.events
+app:
+  kafka:
+    topics:
+      cartonization-requests: cartonization.requests
+      cartonization-responses: cartonization.responses
+      cartonization-solutions: cartonization.solutions
+      cartonization-events: cartonization.events
+      carton-management-requests: carton.management.requests
+      cartonization-requests-dlq: cartonization.requests.dlq
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:cartonization-service}
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      session-timeout-ms: 30000
+      heartbeat-interval-ms: 10000
+      max-poll-records: 500
+      max-poll-interval-ms: 300000
+      concurrency: 3
+  cache:
+    warmup:
+      enabled: true
+      common-skus:
+        - PROD001
+        - PROD002
+        - PROD003
+
+integration:
+  product-catalog:
+    base-url: ${PRODUCT_CATALOG_BASE_URL:http://localhost:8081}
 
 resilience4j:
   circuitbreaker:

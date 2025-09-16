@@ -1,14 +1,12 @@
 package com.paklog.cartonization.domain.model.valueobject;
 
-import lombok.Value;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
-@Value
-public class Weight {
-    BigDecimal value;
-    WeightUnit unit;
+public final class Weight {
+    private final BigDecimal value;
+    private final WeightUnit unit;
 
     private static final BigDecimal POUNDS_TO_KG = new BigDecimal("0.453592");
 
@@ -45,5 +43,34 @@ public class Weight {
             return BigDecimal.ONE.divide(POUNDS_TO_KG, 6, RoundingMode.HALF_UP);
         }
         return BigDecimal.ONE;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public WeightUnit getUnit() {
+        return unit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Weight weight = (Weight) o;
+        return Objects.equals(value, weight.value) && unit == weight.unit;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, unit);
+    }
+
+    @Override
+    public String toString() {
+        return "Weight{" +
+               "value=" + value +
+               ", unit=" + unit +
+               '}';
     }
 }

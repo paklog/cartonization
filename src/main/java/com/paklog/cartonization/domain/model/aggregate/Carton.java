@@ -2,18 +2,19 @@ package com.paklog.cartonization.domain.model.aggregate;
 
 import com.paklog.cartonization.domain.event.CartonCreatedEvent;
 import com.paklog.cartonization.domain.event.CartonDeactivatedEvent;
+import com.paklog.cartonization.domain.event.CartonUpdatedEvent;
 import com.paklog.cartonization.domain.event.DomainEvent;
 import com.paklog.cartonization.domain.model.valueobject.*;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
-@Getter
 public class Carton {
+
+    private static final Logger log = LoggerFactory.getLogger(Carton.class);
 
     private final CartonId id;
     private String name;
@@ -119,7 +120,69 @@ public class Carton {
         validateDimensions(newDimensions);
         this.dimensions = newDimensions;
         this.updatedAt = Instant.now();
+        
+        addDomainEvent(new CartonUpdatedEvent(
+            id.getValue(),
+            name,
+            dimensions,
+            maxWeight,
+            updatedAt
+        ));
+        
         log.info("Updated dimensions for carton: {}", id.getValue());
+    }
+
+    public void updateName(String newName) {
+        if (newName == null || newName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Carton name cannot be empty");
+        }
+        this.name = newName.trim();
+        this.updatedAt = Instant.now();
+        
+        addDomainEvent(new CartonUpdatedEvent(
+            id.getValue(),
+            name,
+            dimensions,
+            maxWeight,
+            updatedAt
+        ));
+        
+        log.info("Updated name for carton: {}", id.getValue());
+    }
+
+    public void updateMaxWeight(Weight newMaxWeight) {
+        validateWeight(newMaxWeight);
+        this.maxWeight = newMaxWeight;
+        this.updatedAt = Instant.now();
+        
+        addDomainEvent(new CartonUpdatedEvent(
+            id.getValue(),
+            name,
+            dimensions,
+            maxWeight,
+            updatedAt
+        ));
+        
+        log.info("Updated max weight for carton: {}", id.getValue());
+    }
+
+    public void updateCarton(String newName, DimensionSet newDimensions, Weight newMaxWeight) {
+        validateCartonData(newName, newDimensions, newMaxWeight);
+        
+        this.name = newName.trim();
+        this.dimensions = newDimensions;
+        this.maxWeight = newMaxWeight;
+        this.updatedAt = Instant.now();
+        
+        addDomainEvent(new CartonUpdatedEvent(
+            id.getValue(),
+            name,
+            dimensions,
+            maxWeight,
+            updatedAt
+        ));
+        
+        log.info("Updated carton: {}", id.getValue());
     }
 
     // Domain event handling
@@ -152,5 +215,33 @@ public class Carton {
         if (weight == null || weight.isZeroOrNegative()) {
             throw new IllegalArgumentException("Invalid carton weight capacity");
         }
+    }
+
+    public CartonId getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public DimensionSet getDimensions() {
+        return dimensions;
+    }
+
+    public Weight getMaxWeight() {
+        return maxWeight;
+    }
+
+    public CartonStatus getStatus() {
+        return status;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }

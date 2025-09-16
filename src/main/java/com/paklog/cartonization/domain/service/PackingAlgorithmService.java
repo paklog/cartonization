@@ -6,7 +6,8 @@ import com.paklog.cartonization.domain.model.entity.PackingSolution;
 import com.paklog.cartonization.domain.model.valueobject.CartonStatus;
 import com.paklog.cartonization.domain.model.valueobject.ItemWithDimensions;
 import com.paklog.cartonization.domain.model.valueobject.PackingRules;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,8 +15,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class PackingAlgorithmService {
+
+    private static final Logger log = LoggerFactory.getLogger(PackingAlgorithmService.class);
 
     public PackingSolution calculateOptimalPacking(
             List<ItemWithDimensions> items,
@@ -88,7 +90,7 @@ public class PackingAlgorithmService {
                 packages.add(bestPackage);
             }
 
-            bestPackage.addItem(item);
+            bestPackage.addItem(item, rules);
         }
 
         return packages;
@@ -107,7 +109,7 @@ public class PackingAlgorithmService {
             // Try to fit in existing packages
             for (Package pkg : packages) {
                 if (pkg.canAddItem(item, rules)) {
-                    pkg.addItem(item);
+                    pkg.addItem(item, rules);
                     packed = true;
                     break;
                 }
@@ -122,7 +124,7 @@ public class PackingAlgorithmService {
                 }
 
                 Package newPackage = Package.create(suitableCarton);
-                newPackage.addItem(item);
+                newPackage.addItem(item, rules);
                 packages.add(newPackage);
             }
         }

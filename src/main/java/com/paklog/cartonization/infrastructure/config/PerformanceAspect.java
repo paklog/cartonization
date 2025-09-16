@@ -1,7 +1,7 @@
 package com.paklog.cartonization.infrastructure.config;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,11 +12,15 @@ import java.time.Instant;
 
 @Aspect
 @Component
-@RequiredArgsConstructor
-@Slf4j
 public class PerformanceAspect {
 
+    private static final Logger log = LoggerFactory.getLogger(PerformanceAspect.class);
+    
     private final PackingMetricsService metricsService;
+    
+    public PerformanceAspect(PackingMetricsService metricsService) {
+        this.metricsService = metricsService;
+    }
 
     @Around("@annotation(com.paklog.cartonization.infrastructure.config.Loggable)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -46,10 +50,4 @@ public class PerformanceAspect {
         }
     }
 
-    @Around("@annotation(com.paklog.cartonization.infrastructure.config.Cacheable)")
-    public Object cacheResult(ProceedingJoinPoint joinPoint) throws Throwable {
-        // Custom caching logic can be implemented here
-        // For now, delegate to Spring's caching mechanism
-        return joinPoint.proceed();
-    }
 }

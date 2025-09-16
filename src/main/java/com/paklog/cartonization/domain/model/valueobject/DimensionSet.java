@@ -1,18 +1,16 @@
 package com.paklog.cartonization.domain.model.valueobject;
 
-import lombok.Value;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-@Value
-public class DimensionSet {
-    BigDecimal length;
-    BigDecimal width;
-    BigDecimal height;
-    DimensionUnit unit;
+public final class DimensionSet {
+    private final BigDecimal length;
+    private final BigDecimal width;
+    private final BigDecimal height;
+    private final DimensionUnit unit;
 
     private static final BigDecimal INCHES_TO_CM = new BigDecimal("2.54");
 
@@ -88,5 +86,47 @@ public class DimensionSet {
         if (value == null || value.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException(dimensionName + " must be positive");
         }
+    }
+
+    public BigDecimal getLength() {
+        return length;
+    }
+
+    public BigDecimal getWidth() {
+        return width;
+    }
+
+    public BigDecimal getHeight() {
+        return height;
+    }
+
+    public DimensionUnit getUnit() {
+        return unit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DimensionSet that = (DimensionSet) o;
+        return Objects.equals(length, that.length) &&
+               Objects.equals(width, that.width) &&
+               Objects.equals(height, that.height) &&
+               unit == that.unit;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(length, width, height, unit);
+    }
+
+    @Override
+    public String toString() {
+        return "DimensionSet{" +
+               "length=" + length +
+               ", width=" + width +
+               ", height=" + height +
+               ", unit=" + unit +
+               '}';
     }
 }

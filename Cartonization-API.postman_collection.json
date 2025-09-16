@@ -1,0 +1,1103 @@
+{
+	"info": {
+		"_postman_id": "cartonization-api-collection",
+		"name": "Cartonization API",
+		"description": "Complete API collection for the Cartonization Service - a microservice that calculates optimal packing solutions for items into cartons.\n\n## Overview\nThis service provides intelligent packing solutions by analyzing item dimensions, weights, and various business rules to determine the most efficient way to pack items into available cartons.\n\n## Features\n- **Packing Solutions**: Calculate optimal packing arrangements\n- **Carton Management**: Create and manage carton types\n- **Health Monitoring**: Service health and system information\n- **Business Rules**: Support for fragile items, category mixing, optimization preferences\n\n## Authentication\nCurrently, the API does not require authentication for development/testing purposes.\n\n## Base URL\n- **Development**: `http://localhost:8080`\n- **Docker**: `http://localhost:8080`\n\n## Headers\n- `Content-Type`: application/json (for POST/PUT requests)\n- `X-Request-ID`: Optional request tracking header\n\nFor more details, visit the API documentation at: `http://localhost:8080/swagger-ui.html`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Packing Solutions",
+			"item": [
+				{
+					"name": "Calculate Packing Solution - Simple",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has packing solution', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('solutionId');",
+									"    pm.expect(jsonData).to.have.property('packages');",
+									"    pm.expect(jsonData).to.have.property('totalPackages');",
+									"    pm.expect(jsonData.packages).to.be.an('array');",
+									"});",
+									"",
+									"pm.test('Packages contain items', function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.packages && jsonData.packages.length > 0) {",
+									"        pm.expect(jsonData.packages[0]).to.have.property('items');",
+									"        pm.expect(jsonData.packages[0].items).to.be.an('array');",
+									"    }",
+									"});",
+									"",
+									"// Store solution ID for other requests",
+									"const jsonData = pm.response.json();",
+									"if (jsonData.solutionId) {",
+									"    pm.environment.set('lastSolutionId', jsonData.solutionId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate a unique request ID",
+									"pm.environment.set('requestId', 'req-' + Date.now());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "{{requestId}}",
+								"description": "Optional request tracking header"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"sku\": \"BOOK-001\",\n      \"quantity\": 2\n    },\n    {\n      \"sku\": \"SHIRT-XL-BLUE\",\n      \"quantity\": 1\n    }\n  ],\n  \"orderId\": \"ORDER-123456\",\n  \"optimizeForMinimumBoxes\": true,\n  \"allowMixedCategories\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/packing-solutions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"packing-solutions"
+							]
+						},
+						"description": "Calculate an optimal packing solution for a simple set of items. This example includes books and clothing items that can be mixed together."
+					},
+					"response": [
+						{
+							"name": "Successful Packing Solution",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\n      \"sku\": \"BOOK-001\",\n      \"quantity\": 2\n    }\n  ],\n  \"orderId\": \"ORDER-123\",\n  \"optimizeForMinimumBoxes\": true\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/packing-solutions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"packing-solutions"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"solutionId\": \"sol-789\",\n  \"requestId\": \"req-123\",\n  \"orderId\": \"ORDER-123456\",\n  \"packages\": [\n    {\n      \"carton\": {\n        \"id\": \"small-box\",\n        \"name\": \"Small Box\",\n        \"dimensions\": {\n          \"length\": 20.0,\n          \"width\": 15.0,\n          \"height\": 10.0,\n          \"unit\": \"CENTIMETERS\"\n        },\n        \"maxWeight\": {\n          \"value\": 5.0,\n          \"unit\": \"KILOGRAMS\"\n        }\n      },\n      \"items\": [\n        {\n          \"sku\": \"BOOK-001\",\n          \"quantity\": 2\n        }\n      ],\n      \"utilization\": 0.75\n    }\n  ],\n  \"totalPackages\": 1,\n  \"averageUtilization\": 0.85\n}"
+						}
+					]
+				},
+				{
+					"name": "Calculate Packing Solution - Complex",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response time is less than 2000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Request-ID",
+								"value": "req-complex-{{$timestamp}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"sku\": \"LAPTOP-DELL-001\",\n      \"quantity\": 1\n    },\n    {\n      \"sku\": \"MOUSE-WIRELESS\",\n      \"quantity\": 2\n    },\n    {\n      \"sku\": \"KEYBOARD-MECHANICAL\",\n      \"quantity\": 1\n    },\n    {\n      \"sku\": \"MONITOR-24IN\",\n      \"quantity\": 1\n    },\n    {\n      \"sku\": \"CABLES-USB-C\",\n      \"quantity\": 3\n    }\n  ],\n  \"orderId\": \"ORDER-TECH-789\",\n  \"optimizeForMinimumBoxes\": false,\n  \"allowMixedCategories\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/packing-solutions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"packing-solutions"
+							]
+						},
+						"description": "Calculate packing solution for a more complex order with electronics. This example optimizes for cost rather than minimum boxes."
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Packing Solution - Fragile Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 or 422', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 422]);",
+									"});",
+									"",
+									"if (pm.response.code === 422) {",
+									"    pm.test('Business rule error for fragile items', function () {",
+									"        const jsonData = pm.response.json();",
+									"        pm.expect(jsonData.error).to.include('Business Rule');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"sku\": \"GLASS-VASE-LARGE\",\n      \"quantity\": 1\n    },\n    {\n      \"sku\": \"WINE-GLASSES-SET\",\n      \"quantity\": 1\n    },\n    {\n      \"sku\": \"CERAMIC-PLATES\",\n      \"quantity\": 4\n    }\n  ],\n  \"orderId\": \"ORDER-FRAGILE-456\",\n  \"optimizeForMinimumBoxes\": true,\n  \"allowMixedCategories\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/packing-solutions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"packing-solutions"
+							]
+						},
+						"description": "Example with fragile items that may require special packing considerations and separate boxes."
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Request - Missing Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Error response has validation details', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    pm.expect(jsonData).to.have.property('message');",
+									"    pm.expect(jsonData.error).to.equal('Validation Failed');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [],\n  \"orderId\": \"ORDER-EMPTY\",\n  \"optimizeForMinimumBoxes\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/packing-solutions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"packing-solutions"
+							]
+						},
+						"description": "Test validation error when no items are provided in the packing request."
+					},
+					"response": [
+						{
+							"name": "Validation Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [],\n  \"orderId\": \"ORDER-EMPTY\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/packing-solutions",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"packing-solutions"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Validation Failed\",\n  \"message\": \"Request validation failed\",\n  \"details\": [\n    \"At least one item is required for packing\"\n  ],\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"path\": \"/api/v1/packing-solutions\"\n}"
+						}
+					]
+				}
+			],
+			"description": "APIs for calculating optimal packing solutions. These endpoints analyze item dimensions, weights, and business rules to determine the most efficient way to pack items into cartons.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Carton Management",
+			"item": [
+				{
+					"name": "Create Carton - Small Box",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response has carton data', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('dimensions');",
+									"    pm.expect(jsonData).to.have.property('maxWeight');",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"});",
+									"",
+									"// Store carton ID for other tests",
+									"const jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.environment.set('testCartonId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Small Box\",\n  \"length\": 20.0,\n  \"width\": 15.0,\n  \"height\": 10.0,\n  \"dimensionUnit\": \"CM\",\n  \"maxWeight\": 5.0,\n  \"weightUnit\": \"KG\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons"
+							]
+						},
+						"description": "Create a new small carton type suitable for books, small electronics, and lightweight items."
+					},
+					"response": [
+						{
+							"name": "Successful Carton Creation",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Small Box\",\n  \"length\": 20.0,\n  \"width\": 15.0,\n  \"height\": 10.0,\n  \"dimensionUnit\": \"CM\",\n  \"maxWeight\": 5.0,\n  \"weightUnit\": \"KG\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cartons",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cartons"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"carton-123\",\n  \"name\": \"Small Box\",\n  \"dimensions\": {\n    \"length\": 20.0,\n    \"width\": 15.0,\n    \"height\": 10.0,\n    \"unit\": \"CENTIMETERS\"\n  },\n  \"maxWeight\": {\n    \"value\": 5.0,\n    \"unit\": \"KILOGRAMS\"\n  },\n  \"status\": \"ACTIVE\",\n  \"createdAt\": \"2024-01-15T10:30:00Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Carton - Medium Box",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Medium Box\",\n  \"length\": 35.0,\n  \"width\": 25.0,\n  \"height\": 20.0,\n  \"dimensionUnit\": \"CM\",\n  \"maxWeight\": 15.0,\n  \"weightUnit\": \"KG\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons"
+							]
+						},
+						"description": "Create a medium-sized carton suitable for clothing, medium electronics, and heavier items."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Carton - Large Box",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Large Box\",\n  \"length\": 50.0,\n  \"width\": 40.0,\n  \"height\": 30.0,\n  \"dimensionUnit\": \"CM\",\n  \"maxWeight\": 25.0,\n  \"weightUnit\": \"KG\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons"
+							]
+						},
+						"description": "Create a large carton for bulky items, furniture parts, or multiple items."
+					},
+					"response": []
+				},
+				{
+					"name": "List All Cartons",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response is an array', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('array');",
+									"});",
+									"",
+									"pm.test('Cartons have required properties', function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.expect(jsonData[0]).to.have.property('id');",
+									"        pm.expect(jsonData[0]).to.have.property('name');",
+									"        pm.expect(jsonData[0]).to.have.property('status');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons"
+							]
+						},
+						"description": "Retrieve all carton types, including both active and inactive ones."
+					},
+					"response": [
+						{
+							"name": "List All Cartons Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cartons",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cartons"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"small-box-001\",\n    \"name\": \"Small Box\",\n    \"dimensions\": {\n      \"length\": 20.0,\n      \"width\": 15.0,\n      \"height\": 10.0,\n      \"unit\": \"CENTIMETERS\"\n    },\n    \"maxWeight\": {\n      \"value\": 5.0,\n      \"unit\": \"KILOGRAMS\"\n    },\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2024-01-15T10:30:00Z\"\n  },\n  {\n    \"id\": \"medium-box-001\",\n    \"name\": \"Medium Box\",\n    \"dimensions\": {\n      \"length\": 35.0,\n      \"width\": 25.0,\n      \"height\": 20.0,\n      \"unit\": \"CENTIMETERS\"\n    },\n    \"maxWeight\": {\n      \"value\": 15.0,\n      \"unit\": \"KILOGRAMS\"\n    },\n    \"status\": \"ACTIVE\",\n    \"createdAt\": \"2024-01-15T10:35:00Z\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "List Active Cartons Only",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons?activeOnly=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons"
+							],
+							"query": [
+								{
+									"key": "activeOnly",
+									"value": "true",
+									"description": "Filter to show only active cartons available for packing"
+								}
+							]
+						},
+						"description": "Retrieve only active carton types that are available for packing solutions."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Carton by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 or 404', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"    pm.test('Response has carton details', function () {",
+									"        const jsonData = pm.response.json();",
+									"        pm.expect(jsonData).to.have.property('id');",
+									"        pm.expect(jsonData).to.have.property('name');",
+									"        pm.expect(jsonData).to.have.property('dimensions');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons/{{testCartonId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons",
+								"{{testCartonId}}"
+							]
+						},
+						"description": "Retrieve details of a specific carton by its ID. Uses the carton ID stored from the creation test."
+					},
+					"response": [
+						{
+							"name": "Carton Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cartons/small-box-001",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cartons",
+										"small-box-001"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"small-box-001\",\n  \"name\": \"Small Box\",\n  \"dimensions\": {\n    \"length\": 20.0,\n    \"width\": 15.0,\n    \"height\": 10.0,\n    \"unit\": \"CENTIMETERS\"\n  },\n  \"maxWeight\": {\n    \"value\": 5.0,\n    \"unit\": \"KILOGRAMS\"\n  },\n  \"status\": \"ACTIVE\",\n  \"createdAt\": \"2024-01-15T10:30:00Z\"\n}"
+						},
+						{
+							"name": "Carton Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cartons/non-existent-carton",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cartons",
+										"non-existent-carton"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"Carton with ID 'non-existent-carton' not found\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"path\": \"/api/v1/cartons/non-existent-carton\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Deactivate Carton",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 204 or 404', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([204, 404]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons/{{testCartonId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons",
+								"{{testCartonId}}"
+							]
+						},
+						"description": "Deactivate a carton type. This makes it unavailable for new packing solutions while preserving historical data."
+					},
+					"response": [
+						{
+							"name": "Carton Deactivated Successfully",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cartons/small-box-001",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cartons",
+										"small-box-001"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Invalid Carton Creation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Validation error response', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('error');",
+									"    pm.expect(jsonData.error).to.equal('Validation Failed');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"\",\n  \"length\": -5.0,\n  \"width\": 15.0,\n  \"height\": 10.0,\n  \"dimensionUnit\": \"INVALID\",\n  \"maxWeight\": 0,\n  \"weightUnit\": \"KG\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/cartons",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"cartons"
+							]
+						},
+						"description": "Test validation errors when creating a carton with invalid data (empty name, negative dimensions, invalid units)."
+					},
+					"response": [
+						{
+							"name": "Validation Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"\",\n  \"length\": -5.0,\n  \"width\": 15.0,\n  \"height\": 10.0,\n  \"dimensionUnit\": \"INVALID\",\n  \"maxWeight\": 0,\n  \"weightUnit\": \"KG\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/cartons",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"cartons"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"error\": \"Validation Failed\",\n  \"message\": \"Request validation failed\",\n  \"details\": [\n    \"Carton name is required\",\n    \"Length must be at least 0.1\",\n    \"Dimension unit must be one of: MM, CM, M, IN, FT\",\n    \"Maximum weight must be at least 0.01\"\n  ],\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"path\": \"/api/v1/cartons\"\n}"
+						}
+					]
+				}
+			],
+			"description": "APIs for managing carton types and specifications. These endpoints allow creation, retrieval, and management of different carton sizes available for packing."
+		},
+		{
+			"name": "Health & Monitoring",
+			"item": [
+				{
+					"name": "Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Health status is UP', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData.status).to.equal('UP');",
+									"});",
+									"",
+									"pm.test('Response has required fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('application');",
+									"    pm.expect(jsonData).to.have.property('version');",
+									"    pm.expect(jsonData).to.have.property('timestamp');",
+									"    pm.expect(jsonData).to.have.property('uptime');",
+									"});",
+									"",
+									"pm.test('Response time is less than 1000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"health"
+							]
+						},
+						"description": "Check the health status of the cartonization service and its dependencies (MongoDB, Redis, etc.)."
+					},
+					"response": [
+						{
+							"name": "Healthy Service",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"status\": \"UP\",\n  \"application\": \"Cartonization Service\",\n  \"version\": \"1.0.0\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"uptime\": \"PT2H30M\",\n  \"cacheStatus\": {\n    \"enabled\": true,\n    \"cartonsCached\": true,\n    \"productsCached\": true,\n    \"availableCaches\": [\"cartons\", \"products\", \"packing-solutions\"]\n  }\n}"
+						}
+					]
+				},
+				{
+					"name": "System Information",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has system details', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('application');",
+									"    pm.expect(jsonData).to.have.property('jvm');",
+									"    pm.expect(jsonData).to.have.property('system');",
+									"});",
+									"",
+									"pm.test('JVM information is present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.jvm).to.have.property('availableProcessors');",
+									"    pm.expect(jsonData.jvm).to.have.property('totalMemory');",
+									"    pm.expect(jsonData.jvm).to.have.property('usedMemory');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/health/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"health",
+								"info"
+							]
+						},
+						"description": "Get detailed system information including JVM metrics, memory usage, and runtime configuration."
+					},
+					"response": [
+						{
+							"name": "System Information Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/v1/health/info",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"health",
+										"info"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"application\": \"Cartonization Service\",\n  \"version\": \"1.0.0\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"uptime\": \"PT2H30M\",\n  \"jvm\": {\n    \"availableProcessors\": 8,\n    \"totalMemory\": 536870912,\n    \"freeMemory\": 123456789,\n    \"usedMemory\": 413414123,\n    \"maxMemory\": 2147483648,\n    \"memoryUsagePercentage\": 19\n  },\n  \"system\": {\n    \"javaVersion\": \"21.0.1\",\n    \"javaVendor\": \"Eclipse Adoptium\",\n    \"osName\": \"Mac OS X\",\n    \"osVersion\": \"14.2.1\",\n    \"osArch\": \"aarch64\"\n  },\n  \"cacheStatus\": {\n    \"enabled\": true,\n    \"cartonsCached\": true,\n    \"productsCached\": true,\n    \"availableCaches\": [\"cartons\", \"products\", \"packing-solutions\"]\n  }\n}"
+						}
+					]
+				}
+			],
+			"description": "Health check and monitoring endpoints for system status, dependencies, and performance metrics."
+		},
+		{
+			"name": "API Documentation",
+			"item": [
+				{
+					"name": "OpenAPI Spec (JSON)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api-docs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api-docs"
+							]
+						},
+						"description": "Get the OpenAPI 3.0 specification in JSON format."
+					},
+					"response": []
+				},
+				{
+					"name": "Swagger UI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/swagger-ui.html",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"swagger-ui.html"
+							]
+						},
+						"description": "Access the interactive Swagger UI documentation. This will return HTML content that should be opened in a browser."
+					},
+					"response": []
+				}
+			],
+			"description": "Access to API documentation and Swagger UI."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set default base URL if not already set",
+					"if (!pm.environment.get('baseUrl')) {",
+					"    pm.environment.set('baseUrl', 'http://localhost:8080');",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global tests that run for all requests",
+					"pm.test('Response time is reasonable', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"// Log response for debugging if needed",
+					"if (pm.response.code >= 400) {",
+					"    console.log('Error Response:', pm.response.text());",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"description": "Base URL for the Cartonization API",
+			"type": "string"
+		}
+	]
+}

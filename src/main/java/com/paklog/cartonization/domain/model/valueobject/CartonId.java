@@ -1,12 +1,10 @@
 package com.paklog.cartonization.domain.model.valueobject;
 
-import lombok.Value;
-
+import java.util.Objects;
 import java.util.UUID;
 
-@Value
-public class CartonId {
-    String value;
+public final class CartonId {
+    private final String value;
 
     private CartonId(String value) {
         if (value == null || value.trim().isEmpty()) {
@@ -21,6 +19,23 @@ public class CartonId {
 
     public static CartonId generate() {
         return new CartonId(UUID.randomUUID().toString());
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CartonId cartonId = (CartonId) o;
+        return Objects.equals(value, cartonId.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
     @Override
