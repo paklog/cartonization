@@ -1,0 +1,957 @@
+
+{
+	"info": {
+		"_postman_id": "a8a0b3a3-7b6b-4c7e-8e6a-0e7b8a0a0a0a",
+		"name": "Cartonization Service - Pre-load Cartons",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Carton 4x4x4",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Small Cube Box (4x4x4)",
+    "dimensions": {
+        "length": {
+            "value": 4,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 4,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 4,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 5,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 5x5x5",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Small Cube Box (5x5x5)",
+    "dimensions": {
+        "length": {
+            "value": 5,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 5,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 5,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 5,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 6x6x6",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Small Cube Box (6x6x6)",
+    "dimensions": {
+        "length": {
+            "value": 6,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 6,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 6,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 10,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 8x8x8",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Medium Cube Box (8x8x8)",
+    "dimensions": {
+        "length": {
+            "value": 8,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 8,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 8,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 15,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 8x6x4",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Small Shipping Box (8x6x4)",
+    "dimensions": {
+        "length": {
+            "value": 8,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 6,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 4,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 10,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 10x8x6",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Medium Shipping Box (10x8x6)",
+    "dimensions": {
+        "length": {
+            "value": 10,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 8,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 6,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 20,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 12x6x6",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Long Shipping Box (12x6x6)",
+    "dimensions": {
+        "length": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 6,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 6,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 20,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 12x9x6",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Medium Shipping Box (12x9x6)",
+    "dimensions": {
+        "length": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 9,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 6,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 25,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 12x12x12",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Large Cube Box (12x12x12)",
+    "dimensions": {
+        "length": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 12,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 30,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 14x10x4",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Large Shipping Box (14x10x4)",
+    "dimensions": {
+        "length": {
+            "value": 14,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 10,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 4,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 25,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 15x12x10",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Large Shipping Box (15x12x10)",
+    "dimensions": {
+        "length": {
+            "value": 15,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 10,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 35,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 16x12x8",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Large Shipping Box (16x12x8)",
+    "dimensions": {
+        "length": {
+            "value": 16,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 8,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 35,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 16x12x10",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Large Shipping Box (16x12x10)",
+    "dimensions": {
+        "length": {
+            "value": 16,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 10,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 40,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 16x12x12",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Extra Large Shipping Box (16x12x12)",
+    "dimensions": {
+        "length": {
+            "value": 16,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 12,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 40,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 18x12x12",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Extra Large Shipping Box (18x12x12)",
+    "dimensions": {
+        "length": {
+            "value": 18,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 12,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 12,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 45,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 18x14x12",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "Extra Large Shipping Box (18x14x12)",
+    "dimensions": {
+        "length": {
+            "value": 18,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 14,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 12,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 50,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 18x18x16",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "XXL Shipping Box (18x18x16)",
+    "dimensions": {
+        "length": {
+            "value": 18,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 18,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 16,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 50,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 18x18x24",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "XXL Shipping Box (18x18x24)",
+    "dimensions": {
+        "length": {
+            "value": 18,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 18,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 24,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 50,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 24x18x24",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "XXL Shipping Box (24x18x24)",
+    "dimensions": {
+        "length": {
+            "value": 24,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 18,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 24,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 50,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Carton 24x24x24",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{
+    "name": "XXL Cube Box (24x24x24)",
+    "dimensions": {
+        "length": {
+            "value": 24,
+            "unit": "INCHES"
+        },
+        "width": {
+            "value": 24,
+            "unit": "INCHES"
+        },
+        "height": {
+            "value": 24,
+            "unit": "INCHES"
+        }
+    },
+    "maxWeight": {
+        "value": 50,
+        "unit": "POUNDS"
+    }
+}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/cartons",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"cartons"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
