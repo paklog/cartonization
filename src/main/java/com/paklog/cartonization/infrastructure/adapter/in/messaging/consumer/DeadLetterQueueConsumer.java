@@ -1,6 +1,7 @@
 package com.paklog.cartonization.infrastructure.adapter.in.messaging.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.cloudevents.CloudEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -11,7 +12,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.Map;
 
 @Component
 public class DeadLetterQueueConsumer {
@@ -27,10 +27,10 @@ public class DeadLetterQueueConsumer {
     @KafkaListener(
         topics = "${app.kafka.topics.cartonization-requests-dlq}",
         groupId = "${app.kafka.consumer.group-id}-dlq",
-        containerFactory = "kafkaListenerContainerFactory"
+        containerFactory = "cloudEventKafkaListenerContainerFactory"
     )
     public void handleDeadLetterMessage(
-            @Payload String payload,
+            @Payload CloudEvent cloudEvent,
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
             @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
             @Header(KafkaHeaders.OFFSET) long offset,
@@ -42,17 +42,22 @@ public class DeadLetterQueueConsumer {
             Acknowledgment acknowledgment) {
 
         try {
-            log.error("Processing dead letter message from topic: {}, partition: {}, offset: {}", 
+            log.error("Processing dead letter CloudEvent from topic: {}, partition: {}, offset: {}",
                      topic, partition, offset);
-            
+            log.error("CloudEvent details: id={}, type={}, source={}",
+                     cloudEvent.getId(), cloudEvent.getType(), cloudEvent.getSource());
+
             if (originalTopic != null) {
-                log.error("Original message was from topic: {}, partition: {}, offset: {}", 
+                log.error("Original message was from topic: {}, partition: {}, offset: {}",
                          originalTopic, originalPartition, originalOffset);
             }
-            
+
             if (exceptionMessage != null) {
                 log.error("Exception that caused DLQ: {}", exceptionMessage);
             }
+
+            // Extract payload from CloudEvent
+            String payload = extractPayloadFromCloudEvent(cloudEvent);
 
             // Parse and log the failed message for analysis
             logFailedMessage(payload, exceptionMessage, originalTopic);
@@ -65,14 +70,26 @@ public class DeadLetterQueueConsumer {
 
             acknowledgment.acknowledge();
 
-            log.info("Successfully processed dead letter message from topic: {}", topic);
+            log.info("Successfully processed dead letter CloudEvent from topic: {}", topic);
 
         } catch (Exception e) {
-            log.error("Failed to process dead letter message. Topic: {}, Partition: {}, Offset: {}, Error: {}", 
+            log.error("Failed to process dead letter CloudEvent. Topic: {}, Partition: {}, Offset: {}, Error: {}",
                      topic, partition, offset, e.getMessage(), e);
-            
+
             // Acknowledge even on error to prevent infinite loop
             acknowledgment.acknowledge();
+        }
+    }
+
+    private String extractPayloadFromCloudEvent(CloudEvent cloudEvent) {
+        try {
+            if (cloudEvent.getData() == null) {
+                return "{}";
+            }
+            return new String(cloudEvent.getData().toBytes());
+        } catch (Exception e) {
+            log.warn("Failed to extract payload from CloudEvent: {}", e.getMessage());
+            return "{}";
         }
     }
 

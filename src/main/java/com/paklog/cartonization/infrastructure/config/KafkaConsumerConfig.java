@@ -14,7 +14,6 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
-import org.springframework.kafka.support.converter.StringJsonMessageConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,103 +51,6 @@ public class KafkaConsumerConfig {
     @Value("${app.kafka.consumer.concurrency:3}")
     private int concurrency;
 
-    @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        
-        // Basic configuration
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        
-        // Offset management
-        configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
-        configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
-        
-        // Session and heartbeat configuration
-        configProps.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeoutMs);
-        configProps.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, heartbeatIntervalMs);
-        
-        // Polling configuration
-        configProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
-        configProps.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, maxPollIntervalMs);
-        
-        // Performance tuning
-        configProps.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1024);
-        configProps.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 500);
-        
-        // Connection configuration
-        configProps.put(ConsumerConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG, 540000);
-        configProps.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000);
-        
-        // Security configuration (add if needed)
-        // configProps.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
-        // configProps.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
-        
-        log.info("Kafka consumer configuration: bootstrapServers={}, groupId={}, autoOffsetReset={}, " +
-                "enableAutoCommit={}, sessionTimeoutMs={}, heartbeatIntervalMs={}, maxPollRecords={}, " +
-                "maxPollIntervalMs={}", 
-                bootstrapServers, groupId, autoOffsetReset, enableAutoCommit, 
-                sessionTimeoutMs, heartbeatIntervalMs, maxPollRecords, maxPollIntervalMs);
-
-        return new DefaultKafkaConsumerFactory<>(configProps);
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = 
-            new ConcurrentKafkaListenerContainerFactory<>();
-        
-        factory.setConsumerFactory(consumerFactory());
-        factory.setConcurrency(concurrency);
-        
-        // Configure message converter for JSON handling
-        factory.setRecordMessageConverter(new StringJsonMessageConverter());
-        
-        // Configure acknowledgment mode
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
-        
-        // Configure error handling
-        factory.setCommonErrorHandler(new org.springframework.kafka.listener.DefaultErrorHandler(
-            (record, exception) -> {
-                log.error("Error processing record: topic={}, partition={}, offset={}, key={}, error={}", 
-                         record.topic(), record.partition(), record.offset(), record.key(), exception.getMessage(), exception);
-            }
-        ));
-        
-        // Configure container properties
-        ContainerProperties containerProps = factory.getContainerProperties();
-        containerProps.setPollTimeout(3000);
-        containerProps.setIdleBetweenPolls(1000);
-        
-        // Configure shutdown behavior
-        containerProps.setShutdownTimeout(30000);
-        
-        log.info("Kafka listener container factory configured with concurrency: {}", concurrency);
-        
-        return factory;
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactoryForBatch() {
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = 
-            new ConcurrentKafkaListenerContainerFactory<>();
-        
-        factory.setConsumerFactory(consumerFactory());
-        factory.setConcurrency(concurrency);
-        
-        // Enable batch processing
-        factory.setBatchListener(true);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.BATCH);
-        
-        // Configure message converter for JSON handling
-        factory.setRecordMessageConverter(new StringJsonMessageConverter());
-        
-        log.info("Batch Kafka listener container factory configured");
-        
-        return factory;
-    }
 
     @Bean
     public ConsumerFactory<String, CloudEvent> cloudEventConsumerFactory() {
