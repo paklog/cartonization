@@ -1,0 +1,61 @@
+asyncapi: 2.6.0
+info:
+  title: Cartonization Service Events
+  version: 1.0.0
+  description: |-
+    This document describes the events published by the Cartonization Service.
+
+servers:
+  production:
+    url: kafka.example.com:9092
+    protocol: kafka
+
+channels:
+  cartonization.packing-solution.calculated:
+    publish:
+      summary: A packing solution has been successfully calculated.
+      operationId: packingSolutionCalculated
+      message:
+        $ref: '#/components/messages/PackingSolutionCalculatedEvent'
+
+components:
+  messages:
+    PackingSolutionCalculatedEvent:
+      name: PackingSolutionCalculatedEvent
+      title: Packing Solution Calculated Event
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/PackingSolutionCalculatedEventPayload'
+
+  schemas:
+    PackingSolutionCalculatedEventPayload:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackedCarton'
+
+    PackedCarton:
+      type: object
+      properties:
+        cartonId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemToPack'
+
+    ItemToPack:
+      type: object
+      properties:
+        sku:
+          type: string
+        quantity:
+          type: integer

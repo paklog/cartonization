@@ -7,7 +7,7 @@ info:
     It consumes data from the Product Catalog API to retrieve item dimensions when needed.
   version: 1.0.0
 servers:
-  - url: https://api.example.com/cartonization/v1
+  - url: /api/v1
 tags:
   - name: Cartons
     description: Operations for managing the inventory of available shipping cartons.
@@ -27,7 +27,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Carton'
+              $ref: '#/components/schemas/CreateCartonRequest'
       responses:
         '201':
           description: Carton created successfully.
@@ -41,6 +41,13 @@ paths:
       summary: List all carton types
       description: Retrieves a list of all available cartons in the inventory.
       operationId: listCartons
+      parameters:
+        - name: activeOnly
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: A list of available cartons.
@@ -63,7 +70,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         '200':
           description: Successful operation.
@@ -73,6 +79,21 @@ paths:
                 $ref: '#/components/schemas/Carton'
         '404':
           description: Carton not found.
+    delete:
+      tags:
+        - Cartons
+      summary: Deactivate a carton
+      description: Deactivates a carton, making it unavailable for future packing solutions.
+      operationId: deactivateCarton
+      parameters:
+        - name: cartonId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '240':
+          description: Carton deactivated successfully.
 
   /packing-solutions:
     post:
@@ -83,13 +104,20 @@ paths:
         Accepts a list of SKUs and quantities and returns the optimal packing solution.
         This endpoint triggers the core bin-packing algorithm. The service will internally fetch product dimensions from the Product Catalog service.
       operationId: calculatePackingSolution
+      parameters:
+        - name: X-Request-ID
+          in: header
+          required: false
+          schema:
+            type: string
+            format: uuid
       requestBody:
         description: The list of items that need to be packed.
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CartonizationRequest'
+              $ref: '#/components/schemas/PackingRequest'
             example:
               items:
                 - sku: "EXAMPLE-SKU-123"
@@ -130,7 +158,29 @@ components:
           $ref: '#/components/schemas/WeightMeasurement'
 
     # Request and Response Objects
-    CartonizationRequest:
+    CreateCartonRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        length:
+          type: number
+          format: float
+        width:
+          type: number
+          format: float
+        height:
+          type: number
+          format: float
+        dimensionUnit:
+          type: string
+        maxWeight:
+          type: number
+          format: float
+        weightUnit:
+          type: string
+
+    PackingRequest:
       type: object
       description: A request to find a packing solution for a set of items.
       properties:
@@ -138,6 +188,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ItemToPack'
+        orderId:
+          type: string
+        optimizeForMinimumBoxes:
+          type: boolean
+        allowMixedCategories:
+          type: boolean
 
     PackingSolution:
       type: object

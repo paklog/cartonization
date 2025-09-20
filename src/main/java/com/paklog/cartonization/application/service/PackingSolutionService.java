@@ -3,37 +3,30 @@ package com.paklog.cartonization.application.service;
 import com.paklog.cartonization.application.port.in.PackingSolutionUseCase;
 import com.paklog.cartonization.application.port.in.command.CalculatePackingSolutionCommand;
 import com.paklog.cartonization.application.port.out.CartonRepository;
+import com.paklog.cartonization.application.port.out.EventPublisher;
 import com.paklog.cartonization.domain.model.aggregate.Carton;
 import com.paklog.cartonization.domain.model.entity.PackingSolution;
 import com.paklog.cartonization.domain.model.valueobject.*;
 import com.paklog.cartonization.domain.service.PackingAlgorithmService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.paklog.cartonization.infrastructure.adapter.out.messaging.event.PackingSolutionCalculatedEvent;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class PackingSolutionService implements PackingSolutionUseCase {
 
-    private static final Logger log = LoggerFactory.getLogger(PackingSolutionService.class);
-    
     private final PackingAlgorithmService packingAlgorithmService;
     private final CartonRepository cartonRepository;
+    private final EventPublisher eventPublisher;
     private final ProductDimensionEnricher productDimensionEnricher;
-    
-    public PackingSolutionService(PackingAlgorithmService packingAlgorithmService, 
-                                CartonRepository cartonRepository,
-                                ProductDimensionEnricher productDimensionEnricher) {
-        this.packingAlgorithmService = packingAlgorithmService;
-        this.cartonRepository = cartonRepository;
-        this.productDimensionEnricher = productDimensionEnricher;
-    }
 
     @Override
     public PackingSolution calculate(CalculatePackingSolutionCommand command) {
@@ -72,67 +65,15 @@ public class PackingSolutionService implements PackingSolutionUseCase {
             log.info("Solution uses {} packages with {} total items",
                     solution.getTotalPackages(), solution.getTotalItems());
 
+            // Publish event
+            PackingSolutionCalculatedEvent event = PackingSolutionCalculatedEvent.from(solution);
+            eventPublisher.publish("cartonization.packing-solution.calculated", solution.getRequestId(), event);
+
             return solution;
 
         } catch (Exception e) {
             log.error("Error calculating packing solution for request: {}", command.getRequestId(), e);
             throw new PackingSolutionException("Failed to calculate packing solution", e);
-        }
-    }
-
-    // Mock implementation - in real scenario, this would call Product Catalog service
-    private List<ItemWithDimensions> enrichItemsWithMockDimensions(List<ItemToPack> items) {
-        return items.stream()
-            .map(item -> {
-                // Mock dimensions based on SKU for demonstration
-                // In production, this would be fetched from Product Catalog service
-                DimensionSet mockDimensions = createMockDimensions(item.getSku());
-                Weight mockWeight = createMockWeight(item.getSku());
-
-                return ItemWithDimensions.builder()
-                    .sku(item.getSku())
-                    .quantity(item.getQuantity())
-                    .dimensions(mockDimensions)
-                    .weight(mockWeight)
-                    .category("GENERAL") // Mock category
-                    .fragile(false) // Mock fragility
-                    .build();
-            })
-            .collect(Collectors.toList());
-    }
-
-    // Mock dimension creation - replace with real Product Catalog integration
-    private DimensionSet createMockDimensions(SKU sku) {
-        String skuValue = sku.getValue().toLowerCase();
-
-        if (skuValue.contains("large")) {
-            return new DimensionSet(
-                BigDecimal.valueOf(18), BigDecimal.valueOf(12), BigDecimal.valueOf(8),
-                DimensionUnit.INCHES
-            );
-        } else if (skuValue.contains("medium")) {
-            return new DimensionSet(
-                BigDecimal.valueOf(12), BigDecimal.valueOf(8), BigDecimal.valueOf(6),
-                DimensionUnit.INCHES
-            );
-        } else {
-            return new DimensionSet(
-                BigDecimal.valueOf(6), BigDecimal.valueOf(4), BigDecimal.valueOf(4),
-                DimensionUnit.INCHES
-            );
-        }
-    }
-
-    // Mock weight creation - replace with real Product Catalog integration
-    private Weight createMockWeight(SKU sku) {
-        String skuValue = sku.getValue().toLowerCase();
-
-        if (skuValue.contains("large")) {
-            return new Weight(BigDecimal.valueOf(5.0), WeightUnit.POUNDS);
-        } else if (skuValue.contains("medium")) {
-            return new Weight(BigDecimal.valueOf(2.5), WeightUnit.POUNDS);
-        } else {
-            return new Weight(BigDecimal.valueOf(1.0), WeightUnit.POUNDS);
         }
     }
 
