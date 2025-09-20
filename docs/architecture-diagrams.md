@@ -250,6 +250,8 @@ classDiagram
     PackingAlgorithmService ..> PackingSolution : creates
 ```
 
+> For a detailed breakdown of each domain object, including its role as an Aggregate, Entity, or Value Object, please see the [Domain Model Documentation](./domain-model.md).
+
 ## 6. Data Flow Architecture
 
 ```mermaid
