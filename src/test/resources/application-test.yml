@@ -1,0 +1,53 @@
+# Test configuration to override application defaults
+spring:
+
+  data:
+    mongodb:
+      # Will be overridden by @DynamicPropertySource in integration tests
+      uri: mongodb://localhost:27017/cartonization_test
+      auto-index-creation: false
+
+  redis:
+    # Disable Redis for tests to avoid connection issues
+    timeout: 1000ms
+    host: localhost
+    port: 6379
+
+  cache:
+    # Use simple cache for tests instead of Redis
+    type: simple
+
+  kafka:
+    # Use standard serializers for tests, not Confluent Avro
+    consumer:
+      group-id: cartonization-service-test
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+
+# Disable security for tests
+security:
+  basic:
+    enabled: false
+
+# Logging for tests
+logging:
+  level:
+    com.paklog.cartonization: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: WARN
+    org.springframework.kafka: WARN
+    org.testcontainers: WARN
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Management endpoints for tests
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

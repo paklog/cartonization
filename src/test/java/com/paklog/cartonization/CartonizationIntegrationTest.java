@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Testcontainers
+@org.springframework.test.context.ActiveProfiles("test")
 class CartonizationIntegrationTest {
 
     @Container
@@ -33,6 +34,9 @@ class CartonizationIntegrationTest {
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
         registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
+        // Disable Redis for tests
+        registry.add("spring.cache.type", () -> "simple");
+        registry.add("spring.data.redis.host", () -> "disabled");
     }
 
     @Test
