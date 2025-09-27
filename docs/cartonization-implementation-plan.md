@@ -299,29 +299,19 @@ sh.shardCollection("cartonization.packing_solutions", { "requestId": "hashed" })
 - `cartonization.solutions` - Calculated packing solutions
 - `cartonization.events` - Domain events (CartonCreated, CartonUpdated, etc.)
 
-### Event Schemas (Avro)
+### Event Schemas (JSON)
 
-```avsc
+```json
 {
-  "type": "record",
-  "name": "CartonizationRequest",
-  "namespace": "com.paklog.cartonization.event",
-  "fields": [
-    {"name": "requestId", "type": "string"},
-    {"name": "orderId", "type": "string"},
-    {"name": "items", "type": {
-      "type": "array",
-      "items": {
-        "type": "record",
-        "name": "Item",
-        "fields": [
-          {"name": "sku", "type": "string"},
-          {"name": "quantity", "type": "int"}
-        ]
-      }
-    }},
-    {"name": "timestamp", "type": "long", "logicalType": "timestamp-millis"}
-  ]
+  "requestId": "string",
+  "orderId": "string",
+  "items": [
+    {
+      "sku": "string",
+      "quantity": "number"
+    }
+  ],
+  "timestamp": "ISO-8601 timestamp"
 }
 ```
 
@@ -335,19 +325,17 @@ spring:
       group-id: cartonization-service
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        specific.avro.reader: true
+        spring.json.trusted.packages: com.paklog.cartonization
         isolation.level: read_committed
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: all
       retries: 3
       properties:
         enable.idempotence: true
-    properties:
-      schema.registry.url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
 ```
 
 ## 6. Spring Boot Configuration
@@ -371,7 +359,6 @@ dependencies {
     
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'io.confluent:kafka-avro-serializer:7.5.0'
     
     // MongoDB
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
@@ -541,7 +528,7 @@ class CartonizationIntegrationTest {
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0");
     
     @Container
-    static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.0"));
+    static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("bitnami/kafka:3.5"));
     
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {

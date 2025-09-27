@@ -375,7 +375,7 @@ graph TB
     subgraph External Services
         MONGO[(MongoDB Atlas)]
         REDIS[(Redis Cloud)]
-        KAFKA[Confluent Cloud]
+        KAFKA[Apache Kafka]
     end
     
     subgraph External Systems

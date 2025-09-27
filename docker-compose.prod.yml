@@ -26,7 +26,6 @@ services:
       
       # Kafka Configuration
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       
       # Product Catalog Integration
       PRODUCT_CATALOG_BASE_URL: ${PRODUCT_CATALOG_BASE_URL:-http://product-catalog:8080}
@@ -246,47 +245,6 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:29092"]
-      interval: 30s
-      timeout: 15s
-      retries: 5
-      start_period: 60s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-
-  # =============================================================================
-  # Schema Registry - Production Configuration
-  # =============================================================================
-  schema-registry:
-    image: confluentinc/cp-schema-registry:7.5.0
-    container_name: cartonization-schema-registry-prod
-    depends_on:
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
-      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
-      SCHEMA_REGISTRY_DEBUG: 'false'
-      SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL: backward
-    deploy:
-      resources:
-        limits:
-          memory: 512MB
-          cpus: "0.5"
-        reservations:
-          memory: 256MB
-          cpus: "0.25"
-    networks:
-      - cartonization-prod-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/subjects"]
       interval: 30s
       timeout: 15s
       retries: 5

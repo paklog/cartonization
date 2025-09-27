@@ -200,7 +200,6 @@ volumes:
 | Service | Port | Description |
 |---------|------|-------------|
 | **Kafka** | 9092 | Message broker |
-| **Schema Registry** | 8081 | Avro schema management |
 | **Zookeeper** | 2181 | Kafka coordination |
 
 ### Development Tools

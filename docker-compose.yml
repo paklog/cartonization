@@ -25,7 +25,6 @@ services:
       
       # Kafka Configuration
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       
       # Product Catalog Integration
       PRODUCT_CATALOG_BASE_URL: http://product-catalog-mock:1080
@@ -48,8 +47,6 @@ services:
       redis:
         condition: service_healthy
       kafka:
-        condition: service_healthy
-      schema-registry:
         condition: service_healthy
     networks:
       - cartonization-network
@@ -160,33 +157,6 @@ services:
       start_period: 30s
 
   # =============================================================================
-  # Schema Registry
-  # =============================================================================
-  schema-registry:
-    image: confluentinc/cp-schema-registry:7.5.0
-    container_name: cartonization-schema-registry
-    depends_on:
-      kafka:
-        condition: service_healthy
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
-      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-      SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
-      SCHEMA_REGISTRY_DEBUG: 'false'
-    networks:
-      - cartonization-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/subjects"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-
-  # =============================================================================
   # Product Catalog Mock Service
   # =============================================================================
   product-catalog-mock:
@@ -217,13 +187,11 @@ services:
     container_name: cartonization-kafka-ui
     depends_on:
       - kafka
-      - schema-registry
     ports:
       - "8085:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: cartonization-cluster
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
-      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
       DYNAMIC_CONFIG_ENABLED: 'true'
     networks:
       - cartonization-network

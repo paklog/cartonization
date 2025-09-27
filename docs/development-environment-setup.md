@@ -58,11 +58,10 @@ services:
 
   # Zookeeper (for Kafka)
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
+    image: bitnami/zookeeper:3.8
     container_name: cartonization-zookeeper
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+      ALLOW_ANONYMOUS_LOGIN: yes
     ports:
       - "2181:2181"
     networks:
@@ -70,37 +69,21 @@ services:
 
   # Kafka
   kafka:
-    image: confluentinc/cp-kafka:7.5.0
+    image: bitnami/kafka:3.5
     container_name: cartonization-kafka
     depends_on:
       - zookeeper
     ports:
       - "9092:9092"
-      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_HOST://kafka:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_HOST
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-    networks:
-      - cartonization-network
-
-  # Schema Registry
-  schema-registry:
-    image: confluentinc/cp-schema-registry:7.5.0
-    container_name: cartonization-schema-registry
-    depends_on:
-      - kafka
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
-      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: yes
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR: 1
     networks:
       - cartonization-network
 
@@ -110,14 +93,12 @@ services:
     container_name: cartonization-kafka-ui
     depends_on:
       - kafka
-      - schema-registry
     ports:
       - "8090:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
     networks:
       - cartonization-network
 
@@ -301,7 +282,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven { url 'https://packages.confluent.io/maven/' }
 }
 
 ext {
@@ -327,8 +307,6 @@ dependencies {
     
     // Kafka
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'io.confluent:kafka-avro-serializer:7.5.0'
-    implementation 'org.apache.avro:avro:1.11.3'
     
     // OpenAPI/Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
@@ -427,19 +405,17 @@ spring:
       group-id: cartonization-service
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        specific.avro.reader: true
+        spring.json.trusted.packages: com.paklog.cartonization
         isolation.level: read_committed
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: all
       retries: 3
       properties:
         enable.idempotence: true
-    properties:
-      schema.registry.url: http://localhost:8081
 
   cache:
     type: redis
@@ -533,12 +509,12 @@ docker-compose logs -f mongodb
 docker exec -it cartonization-kafka bash
 
 # Create topics
-kafka-topics --create --topic cartonization.requests --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
-kafka-topics --create --topic cartonization.solutions --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
-kafka-topics --create --topic cartonization.events --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+kafka-topics.sh --create --topic cartonization.requests --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+kafka-topics.sh --create --topic cartonization.solutions --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+kafka-topics.sh --create --topic cartonization.events --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
 
 # List topics to verify
-kafka-topics --list --bootstrap-server localhost:9092
+kafka-topics.sh --list --bootstrap-server localhost:9092
 ```
 
 ### Building and Running the Application
@@ -644,7 +620,7 @@ class CartonizationIntegrationTest {
 
     @Container
     static KafkaContainer kafkaContainer = new KafkaContainer(
-        DockerImageName.parse("confluentinc/cp-kafka:7.5.0")
+        DockerImageName.parse("bitnami/kafka:3.5")
     );
 
     @DynamicPropertySource
@@ -716,10 +692,10 @@ show collections
 docker-compose logs kafka
 
 # List topics
-docker exec -it cartonization-kafka kafka-topics --list --bootstrap-server localhost:9092
+docker exec -it cartonization-kafka kafka-topics.sh --list --bootstrap-server localhost:9092
 
 # Check consumer groups
-docker exec -it cartonization-kafka kafka-consumer-groups --list --bootstrap-server localhost:9092
+docker exec -it cartonization-kafka kafka-consumer-groups.sh --list --bootstrap-server localhost:9092
 ```
 
 #### Redis Connection Issues
