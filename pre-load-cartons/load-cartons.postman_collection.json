@@ -14,25 +14,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Small Cube Box (4x4x4)",
-    "dimensions": {
-        "length": {
-            "value": 4,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 4,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 4,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 5,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Small Cube Box (4x4x4)\",
+  \"length\": 4.0,
+  \"width\": 4.0,
+  \"height\": 4.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 5.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -60,25 +48,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Small Cube Box (5x5x5)",
-    "dimensions": {
-        "length": {
-            "value": 5,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 5,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 5,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 5,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Small Cube Box (5x5x5)\",
+  \"length\": 5.0,
+  \"width\": 5.0,
+  \"height\": 5.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 5.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -106,25 +82,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Small Cube Box (6x6x6)",
-    "dimensions": {
-        "length": {
-            "value": 6,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 6,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 6,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 10,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Small Cube Box (6x6x6)\",
+  \"length\": 6.0,
+  \"width\": 6.0,
+  \"height\": 6.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 10.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -152,25 +116,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Medium Cube Box (8x8x8)",
-    "dimensions": {
-        "length": {
-            "value": 8,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 8,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 8,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 15,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Medium Cube Box (8x8x8)\",
+  \"length\": 8.0,
+  \"width\": 8.0,
+  \"height\": 8.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 15.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -198,25 +150,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Small Shipping Box (8x6x4)",
-    "dimensions": {
-        "length": {
-            "value": 8,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 6,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 4,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 10,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Small Shipping Box (8x6x4)\",
+  \"length\": 8.0,
+  \"width\": 6.0,
+  \"height\": 4.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 10.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -244,25 +184,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Medium Shipping Box (10x8x6)",
-    "dimensions": {
-        "length": {
-            "value": 10,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 8,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 6,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 20,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Medium Shipping Box (10x8x6)\",
+  \"length\": 10.0,
+  \"width\": 8.0,
+  \"height\": 6.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 20.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -290,25 +218,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Long Shipping Box (12x6x6)",
-    "dimensions": {
-        "length": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 6,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 6,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 20,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Long Shipping Box (12x6x6)\",
+  \"length\": 12.0,
+  \"width\": 6.0,
+  \"height\": 6.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 20.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -336,25 +252,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Medium Shipping Box (12x9x6)",
-    "dimensions": {
-        "length": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 9,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 6,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 25,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Medium Shipping Box (12x9x6)\",
+  \"length\": 12.0,
+  \"width\": 9.0,
+  \"height\": 6.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 25.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -382,25 +286,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Large Cube Box (12x12x12)",
-    "dimensions": {
-        "length": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 12,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 30,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Large Cube Box (12x12x12)\",
+  \"length\": 12.0,
+  \"width\": 12.0,
+  \"height\": 12.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 30.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -428,25 +320,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Large Shipping Box (14x10x4)",
-    "dimensions": {
-        "length": {
-            "value": 14,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 10,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 4,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 25,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Large Shipping Box (14x10x4)\",
+  \"length\": 14.0,
+  \"width\": 10.0,
+  \"height\": 4.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 25.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -474,25 +354,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Large Shipping Box (15x12x10)",
-    "dimensions": {
-        "length": {
-            "value": 15,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 10,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 35,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Large Shipping Box (15x12x10)\",
+  \"length\": 15.0,
+  \"width\": 12.0,
+  \"height\": 10.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 35.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -520,25 +388,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Large Shipping Box (16x12x8)",
-    "dimensions": {
-        "length": {
-            "value": 16,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 8,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 35,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Large Shipping Box (16x12x8)\",
+  \"length\": 16.0,
+  \"width\": 12.0,
+  \"height\": 8.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 35.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -566,25 +422,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Large Shipping Box (16x12x10)",
-    "dimensions": {
-        "length": {
-            "value": 16,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 10,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 40,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Large Shipping Box (16x12x10)\",
+  \"length\": 16.0,
+  \"width\": 12.0,
+  \"height\": 10.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 40.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -612,25 +456,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Extra Large Shipping Box (16x12x12)",
-    "dimensions": {
-        "length": {
-            "value": 16,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 12,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 40,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Extra Large Shipping Box (16x12x12)\",
+  \"length\": 16.0,
+  \"width\": 12.0,
+  \"height\": 12.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 40.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -658,25 +490,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Extra Large Shipping Box (18x12x12)",
-    "dimensions": {
-        "length": {
-            "value": 18,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 12,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 12,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 45,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Extra Large Shipping Box (18x12x12)\",
+  \"length\": 18.0,
+  \"width\": 12.0,
+  \"height\": 12.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 45.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -704,25 +524,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "Extra Large Shipping Box (18x14x12)",
-    "dimensions": {
-        "length": {
-            "value": 18,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 14,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 12,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 50,
-        "unit": "POUNDS"
-    }
+  \"name\": \"Extra Large Shipping Box (18x14x12)\",
+  \"length\": 18.0,
+  \"width\": 14.0,
+  \"height\": 12.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 50.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -750,25 +558,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "XXL Shipping Box (18x18x16)",
-    "dimensions": {
-        "length": {
-            "value": 18,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 18,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 16,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 50,
-        "unit": "POUNDS"
-    }
+  \"name\": \"XXL Shipping Box (18x18x16)\",
+  \"length\": 18.0,
+  \"width\": 18.0,
+  \"height\": 16.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 50.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -796,25 +592,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "XXL Shipping Box (18x18x24)",
-    "dimensions": {
-        "length": {
-            "value": 18,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 18,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 24,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 50,
-        "unit": "POUNDS"
-    }
+  \"name\": \"XXL Shipping Box (18x18x24)\",
+  \"length\": 18.0,
+  \"width\": 18.0,
+  \"height\": 24.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 50.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -842,25 +626,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "XXL Shipping Box (24x18x24)",
-    "dimensions": {
-        "length": {
-            "value": 24,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 18,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 24,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 50,
-        "unit": "POUNDS"
-    }
+  \"name\": \"XXL Shipping Box (24x18x24)\",
+  \"length\": 24.0,
+  \"width\": 18.0,
+  \"height\": 24.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 50.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {
@@ -888,25 +660,13 @@
 				"body": {
 					"mode": "raw",
 					"raw": "{
-    "name": "XXL Cube Box (24x24x24)",
-    "dimensions": {
-        "length": {
-            "value": 24,
-            "unit": "INCHES"
-        },
-        "width": {
-            "value": 24,
-            "unit": "INCHES"
-        },
-        "height": {
-            "value": 24,
-            "unit": "INCHES"
-        }
-    },
-    "maxWeight": {
-        "value": 50,
-        "unit": "POUNDS"
-    }
+  \"name\": \"XXL Cube Box (24x24x24)\",
+  \"length\": 24.0,
+  \"width\": 24.0,
+  \"height\": 24.0,
+  \"dimensionUnit\": \"IN\",
+  \"maxWeight\": 50.0,
+  \"weightUnit\": \"LB\"
 }",
 					"options": {
 						"raw": {

@@ -92,7 +92,7 @@ paths:
           schema:
             type: string
       responses:
-        '240':
+        '204':
           description: Carton deactivated successfully.
 
   /packing-solutions:
@@ -249,7 +249,7 @@ components:
           format: float
         unit:
           type: string
-          enum: [INCHES, CENTIMETERS]
+          enum: [MM, CM, M, IN, FT]
 
     WeightMeasurement:
       type: object
@@ -259,4 +259,4 @@ components:
           format: float
         unit:
           type: string
-          enum: [POUNDS, KILOGRAMS]
+          enum: [G, KG, LB, OZ]
