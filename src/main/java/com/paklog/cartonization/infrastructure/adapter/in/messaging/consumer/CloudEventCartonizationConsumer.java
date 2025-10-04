@@ -3,6 +3,7 @@ package com.paklog.cartonization.infrastructure.adapter.in.messaging.consumer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paklog.cartonization.application.port.in.PackingSolutionUseCase;
 import com.paklog.cartonization.application.port.in.command.CalculatePackingSolutionCommand;
+import com.paklog.cartonization.application.service.IdempotencyService;
 import com.paklog.cartonization.domain.model.entity.PackingSolution;
 import com.paklog.cartonization.infrastructure.adapter.in.messaging.cloudevents.CloudEventFactory;
 import com.paklog.cartonization.infrastructure.adapter.in.messaging.cloudevents.CloudEventTypes;
@@ -35,17 +36,20 @@ public class CloudEventCartonizationConsumer {
     private final CartonizationEventMapper eventMapper;
     private final CloudEventFactory cloudEventFactory;
     private final ObjectMapper objectMapper;
+    private final IdempotencyService idempotencyService;
 
     public CloudEventCartonizationConsumer(PackingSolutionUseCase packingSolutionUseCase,
                                          CloudEventPublisher cloudEventPublisher,
                                          CartonizationEventMapper eventMapper,
                                          CloudEventFactory cloudEventFactory,
-                                         ObjectMapper objectMapper) {
+                                         ObjectMapper objectMapper,
+                                         IdempotencyService idempotencyService) {
         this.packingSolutionUseCase = packingSolutionUseCase;
         this.cloudEventPublisher = cloudEventPublisher;
         this.eventMapper = eventMapper;
         this.cloudEventFactory = cloudEventFactory;
         this.objectMapper = objectMapper;
+        this.idempotencyService = idempotencyService;
     }
 
     @KafkaListener(
@@ -79,9 +83,16 @@ public class CloudEventCartonizationConsumer {
 
             // Extract and parse the event data
             requestEvent = extractCartonizationRequest(cloudEvent);
-            
-            log.info("Processing cartonization request: {} for order: {}", 
+
+            log.info("Processing cartonization request: {} for order: {}",
                     requestEvent.getRequestId(), requestEvent.getOrderId());
+
+            // Check idempotency - skip if already processed
+            if (!idempotencyService.tryAcquireIdempotencyLock(requestEvent.getRequestId())) {
+                log.info("Request {} already processed, skipping duplicate", requestEvent.getRequestId());
+                acknowledgment.acknowledge();
+                return;
+            }
 
             // Validate the request
             validateRequest(requestEvent);

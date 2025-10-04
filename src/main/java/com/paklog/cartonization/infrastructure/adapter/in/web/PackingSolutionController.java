@@ -243,7 +243,7 @@ public class PackingSolutionController {
     public record PackingRequest(
         @Schema(
             description = "List of items to be packed",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             minLength = 1
         )
         @NotEmpty(message = "At least one item is required for packing")

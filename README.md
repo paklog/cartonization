@@ -206,19 +206,19 @@ The service exposes comprehensive metrics:
 
 ## 🔒 Security
 
-### Authentication & Authorization
+### Current Status
 
-- HTTP Basic Authentication
-- JWT token support (configurable)
-- Role-based access control
-- API key authentication
+⚠️ **Spring Security temporarily disabled** for development purposes.
 
-### Data Protection
+All endpoints are publicly accessible. **Add authentication before production deployment.**
 
-- TLS/SSL encryption
-- Sensitive data encryption at rest
-- Secure credential management
-- Audit logging
+### Production Recommendations
+
+- Add Spring Security with JWT/OAuth2
+- Use API Gateway for authentication
+- Enable TLS/SSL encryption
+- Implement secure credential management
+- Add audit logging
 
 ## ⚡ Performance Optimization
 

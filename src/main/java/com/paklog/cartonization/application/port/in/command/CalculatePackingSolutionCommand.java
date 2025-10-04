@@ -5,6 +5,7 @@ import com.paklog.cartonization.domain.model.valueobject.ItemToPack;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public final class CalculatePackingSolutionCommand {
     private final String requestId;
 
     @NotEmpty(message = "At least one item is required for packing")
+    @Size(max = 1000, message = "Cannot process more than 1000 items per request")
     @Valid
     private final List<ItemToPack> items;
 

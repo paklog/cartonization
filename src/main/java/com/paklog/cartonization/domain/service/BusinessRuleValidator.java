@@ -2,6 +2,7 @@ package com.paklog.cartonization.domain.service;
 
 import com.paklog.cartonization.domain.model.valueobject.ItemWithDimensions;
 import com.paklog.cartonization.domain.model.valueobject.PackingRules;
+import java.math.RoundingMode;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -70,7 +71,7 @@ public class BusinessRuleValidator {
             return true;
         }
 
-        BigDecimal utilization = totalWeight.divide(maxWeight, 4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal utilization = totalWeight.divide(maxWeight, 4, RoundingMode.HALF_UP);
         return utilization.compareTo(threshold) > 0;
     }
 
@@ -83,7 +84,7 @@ public class BusinessRuleValidator {
             return true;
         }
 
-        BigDecimal utilization = usedVolume.divide(totalVolume, 4, BigDecimal.ROUND_HALF_UP);
+        BigDecimal utilization = usedVolume.divide(totalVolume, 4, RoundingMode.HALF_UP);
         return utilization.compareTo(threshold) > 0;
     }
 
@@ -125,7 +126,7 @@ public class BusinessRuleValidator {
             String firstCategory = items.get(0).getCategory();
             boolean hasMultipleCategories = items.stream()
                 .anyMatch(item -> !item.getCategory().equals(firstCategory));
-            
+
             if (hasMultipleCategories) {
                 throw new IllegalArgumentException("Mixed categories not allowed according to packing rules");
             }
@@ -134,7 +135,7 @@ public class BusinessRuleValidator {
         if (rules.shouldSeparateFragileItems()) {
             boolean hasFragile = items.stream().anyMatch(ItemWithDimensions::isFragile);
             boolean hasNonFragile = items.stream().anyMatch(item -> !item.isFragile());
-            
+
             if (hasFragile && hasNonFragile) {
                 throw new IllegalArgumentException("Fragile and non-fragile items cannot be packed together according to packing rules");
             }

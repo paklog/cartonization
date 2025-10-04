@@ -7,18 +7,19 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://cartonization_user:cartonization_pass@localhost:27017/cartonization
+      uri: mongodb://${MONGO_HOST:localhost}:${MONGO_PORT:27017}/${MONGO_DATABASE:cartonization}${MONGO_AUTH_SOURCE:}
       auto-index-creation: false
 
   redis:
-    host: localhost
-    port: 6379
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
     timeout: 2000ms
     lettuce:
       pool:
-        max-active: 8
-        max-idle: 8
-        min-idle: 0
+        max-active: 50
+        max-idle: 25
+        min-idle: 10
+      shutdown-timeout: 100ms
 
   kafka:
     bootstrap-servers: localhost:9092
@@ -64,16 +65,46 @@ resilience4j:
     instances:
       product-catalog:
         register-health-indicator: true
-        sliding-window-size: 10
-        minimum-number-of-calls: 5
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10s
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 100
+        minimum-number-of-calls: 20
+        failure-rate-threshold: 30
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 10
+        automatic-transition-from-open-to-half-open-enabled: true
 
   retry:
     instances:
       product-catalog:
         max-attempts: 3
         wait-duration: 1s
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - org.springframework.web.client.ResourceAccessException
+          - java.net.SocketTimeoutException
+
+  bulkhead:
+    instances:
+      product-catalog:
+        max-concurrent-calls: 25
+        max-wait-duration: 100ms
+
+  thread-pool-bulkhead:
+    instances:
+      product-catalog:
+        max-thread-pool-size: 10
+        core-thread-pool-size: 5
+        queue-capacity: 50
+        keep-alive-duration: 20ms
+
+  ratelimiter:
+    instances:
+      cartonization-api:
+        limit-for-period: 100
+        limit-refresh-period: 1s
+        timeout-duration: 0
 
 management:
   endpoints:
@@ -95,10 +126,10 @@ logging:
     com.paklog.cartonization: DEBUG
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
   pattern:
-    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - [%X{correlationId}] [%X{requestId}] %msg%n"
 
 server:
-  port: 8080
+  port: 8084
   error:
     include-message: always
     include-binding-errors: always

@@ -8,9 +8,9 @@ import com.paklog.cartonization.domain.model.aggregate.Carton;
 import com.paklog.cartonization.domain.model.entity.PackingSolution;
 import com.paklog.cartonization.domain.model.valueobject.*;
 import com.paklog.cartonization.domain.service.PackingAlgorithmService;
-import com.paklog.cartonization.infrastructure.adapter.out.messaging.event.PackingSolutionCalculatedEvent;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.paklog.cartonization.domain.event.PackingSolutionCalculated;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,15 +18,25 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 @Transactional
 public class PackingSolutionService implements PackingSolutionUseCase {
+
+    private static final Logger log = LoggerFactory.getLogger(PackingSolutionService.class);
 
     private final PackingAlgorithmService packingAlgorithmService;
     private final CartonRepository cartonRepository;
     private final EventPublisher eventPublisher;
     private final ProductDimensionEnricher productDimensionEnricher;
+
+    public PackingSolutionService(PackingAlgorithmService packingAlgorithmService,
+                                   CartonRepository cartonRepository,
+                                   EventPublisher eventPublisher,
+                                   ProductDimensionEnricher productDimensionEnricher) {
+        this.packingAlgorithmService = packingAlgorithmService;
+        this.cartonRepository = cartonRepository;
+        this.eventPublisher = eventPublisher;
+        this.productDimensionEnricher = productDimensionEnricher;
+    }
 
     @Override
     public PackingSolution calculate(CalculatePackingSolutionCommand command) {
@@ -65,8 +75,8 @@ public class PackingSolutionService implements PackingSolutionUseCase {
             log.info("Solution uses {} packages with {} total items",
                     solution.getTotalPackages(), solution.getTotalItems());
 
-            // Publish event
-            PackingSolutionCalculatedEvent event = PackingSolutionCalculatedEvent.from(solution);
+            // Publish domain event
+            PackingSolutionCalculated event = PackingSolutionCalculated.from(solution);
             eventPublisher.publish("cartonization.packing-solution.calculated", solution.getRequestId(), event);
 
             return solution;

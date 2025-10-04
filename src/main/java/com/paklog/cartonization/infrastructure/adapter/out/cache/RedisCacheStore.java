@@ -1,6 +1,8 @@
 package com.paklog.cartonization.infrastructure.adapter.out.cache;
 
 import com.paklog.cartonization.application.port.out.CacheStore;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,9 +18,14 @@ public class RedisCacheStore implements CacheStore {
     private static final Logger log = LoggerFactory.getLogger(RedisCacheStore.class);
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final Counter cacheFailureCounter;
 
-    public RedisCacheStore(RedisTemplate<String, Object> redisTemplate) {
+    public RedisCacheStore(RedisTemplate<String, Object> redisTemplate, MeterRegistry meterRegistry) {
         this.redisTemplate = redisTemplate;
+        this.cacheFailureCounter = Counter.builder("cache.failures")
+                .description("Number of cache operation failures")
+                .tag("cache", "redis")
+                .register(meterRegistry);
     }
 
     @Override
@@ -27,8 +34,9 @@ public class RedisCacheStore implements CacheStore {
             redisTemplate.opsForValue().set(key, value);
             log.debug("Stored value in cache with key: {}", key);
         } catch (Exception e) {
-            log.error("Failed to store value in cache with key: {}", key, e);
-            throw new RuntimeException("Cache store operation failed", e);
+            cacheFailureCounter.increment();
+            log.error("Failed to store value in cache with key: {}, continuing without cache", key, e);
+            // Graceful degradation - don't throw, just log and continue
         }
     }
 
@@ -38,8 +46,9 @@ public class RedisCacheStore implements CacheStore {
             redisTemplate.opsForValue().set(key, value, ttl);
             log.debug("Stored value in cache with key: {} and TTL: {}", key, ttl);
         } catch (Exception e) {
-            log.error("Failed to store value in cache with key: {} and TTL: {}", key, ttl, e);
-            throw new RuntimeException("Cache store operation failed", e);
+            cacheFailureCounter.increment();
+            log.error("Failed to store value in cache with key: {} and TTL: {}, continuing without cache", key, ttl, e);
+            // Graceful degradation - don't throw, just log and continue
         }
     }
 
@@ -87,8 +96,9 @@ public class RedisCacheStore implements CacheStore {
             boolean result = deleted != null && deleted;
             log.debug("Deleted key from cache: {} - Success: {}", key, result);
         } catch (Exception e) {
-            log.error("Failed to delete key from cache: {}", key, e);
-            throw new RuntimeException("Cache delete operation failed", e);
+            cacheFailureCounter.increment();
+            log.error("Failed to delete key from cache: {}, continuing", key, e);
+            // Graceful degradation - don't throw
         }
     }
 
@@ -103,8 +113,9 @@ public class RedisCacheStore implements CacheStore {
                 log.debug("No keys found matching pattern: {}", pattern);
             }
         } catch (Exception e) {
-            log.error("Failed to delete keys by pattern: {}", pattern, e);
-            throw new RuntimeException("Cache delete by pattern operation failed", e);
+            cacheFailureCounter.increment();
+            log.error("Failed to delete keys by pattern: {}, continuing", pattern, e);
+            // Graceful degradation - don't throw
         }
     }
 
@@ -112,18 +123,19 @@ public class RedisCacheStore implements CacheStore {
     public void clear() {
         try {
             // Note: This clears ALL keys in the current database, use with caution
-            redisTemplate.getConnectionFactory().getConnection().flushDb();
+            redisTemplate.getConnectionFactory().getConnection().serverCommands().flushDb();
             log.info("Cleared all keys from cache database");
         } catch (Exception e) {
-            log.error("Failed to clear cache database", e);
-            throw new RuntimeException("Cache clear operation failed", e);
+            cacheFailureCounter.increment();
+            log.error("Failed to clear cache database, continuing", e);
+            // Graceful degradation - don't throw
         }
     }
 
     @Override
     public long size() {
         try {
-            Long dbSize = redisTemplate.getConnectionFactory().getConnection().dbSize();
+            Long dbSize = redisTemplate.getConnectionFactory().getConnection().serverCommands().dbSize();
             long result = dbSize != null ? dbSize : 0L;
             log.debug("Cache database size: {}", result);
             return result;

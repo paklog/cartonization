@@ -1,15 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f4d4ae2-60da-4bde-a998-5de2ac6a22ef" name="Changes" comment="" />
+    <list default="true" id="6f4d4ae2-60da-4bde-a998-5de2ac6a22ef" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/asyncapi.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/configmap.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/deployment.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/hpa.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/ingress.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/secret.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/k8s/service.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/application/port/in/command/CalculatePackingSolutionCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/application/port/in/command/CalculatePackingSolutionCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/application/service/PackingSolutionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/application/service/PackingSolutionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/domain/service/BusinessRuleValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/domain/service/BusinessRuleValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/in/messaging/consumer/CloudEventCartonizationConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/in/messaging/consumer/CloudEventCartonizationConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/in/web/PackingSolutionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/in/web/PackingSolutionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/out/cache/RedisCacheStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/out/cache/RedisCacheStore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/out/messaging/event/PackingSolutionCalculatedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/adapter/out/messaging/event/PackingSolutionCalculatedEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/paklog/cartonization/infrastructure/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
+  <component name="Git.Pull.Settings">
+    <option name="OPTIONS">
+      <set>
+        <option value="REBASE" />
+      </set>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;claudioed&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:paklog/cartonization.git&quot;,
+    &quot;accountId&quot;: &quot;9bcb8a37-05a5-495c-888c-1589cd32e95f&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
 }]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="32h3xGrPEvRKHo3hwMiW8SVDKCZ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -18,18 +68,41 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.CartonizationApplication.executor": "Debug",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/claudioed/development/github/paklog/cartonization",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration name="CartonizationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="cartonization" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.paklog.cartonization.CartonizationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
+        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
       </set>
     </attachedChunks>
   </component>
@@ -41,6 +114,8 @@
       <option name="presentableId" value="Default" />
       <updated>1757859221760</updated>
       <workItem from="1757859223051" duration="30000" />
+      <workItem from="1758978196871" duration="44000" />
+      <workItem from="1759585056445" duration="2206000" />
     </task>
     <servers />
   </component>

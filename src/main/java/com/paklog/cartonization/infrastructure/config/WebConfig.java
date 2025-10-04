@@ -20,6 +20,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     private static final Logger log = LoggerFactory.getLogger(WebConfig.class);
 
+    private final CorrelationIdInterceptor correlationIdInterceptor;
+
+    public WebConfig(CorrelationIdInterceptor correlationIdInterceptor) {
+        this.correlationIdInterceptor = correlationIdInterceptor;
+    }
+
     @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:8080}")
     private List<String> allowedOrigins;
 
@@ -50,14 +56,17 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        // Correlation ID interceptor (includes request ID handling)
+        registry.addInterceptor(correlationIdInterceptor)
+            .addPathPatterns("/api/**")
+            .excludePathPatterns("/actuator/**");
+
+        // Request logging interceptor
         registry.addInterceptor(new RequestLoggingInterceptor())
             .addPathPatterns("/api/**")
             .excludePathPatterns("/actuator/**");
-        
-        registry.addInterceptor(new RequestIdInterceptor())
-            .addPathPatterns("/api/**");
 
-        log.info("Request interceptors registered");
+        log.info("Request interceptors registered: correlation tracking, request logging");
     }
 
     private static class RequestLoggingInterceptor implements HandlerInterceptor {
@@ -96,31 +105,4 @@ public class WebConfig implements WebMvcConfigurer {
         }
     }
 
-    private static class RequestIdInterceptor implements HandlerInterceptor {
-        @Override
-        public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-            String requestId = request.getHeader("X-Request-ID");
-            if (requestId == null || requestId.trim().isEmpty()) {
-                requestId = java.util.UUID.randomUUID().toString();
-            }
-            
-            // Add to MDC for logging
-            org.slf4j.MDC.put("requestId", requestId);
-            
-            // Add to response
-            response.setHeader("X-Request-ID", requestId);
-            
-            // Store in request for later use
-            request.setAttribute("requestId", requestId);
-            
-            return true;
-        }
-
-        @Override
-        public void afterCompletion(HttpServletRequest request, HttpServletResponse response, 
-                                  Object handler, Exception ex) {
-            // Clean up MDC
-            org.slf4j.MDC.remove("requestId");
-        }
-    }
 }

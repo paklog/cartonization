@@ -1,5 +1,7 @@
 package com.paklog.cartonization.infrastructure.adapter.out.messaging.event;
 
+import com.paklog.cartonization.domain.event.PackingSolutionCalculated;
+
 import java.util.Objects;
 
 import java.math.BigDecimal;
@@ -88,6 +90,18 @@ public class PackingSolutionCalculatedEvent {
     
     public static Builder builder() {
         return new Builder();
+    }
+
+    public static PackingSolutionCalculatedEvent from(PackingSolutionCalculated domainEvent) {
+        return builder()
+            .solutionId(domainEvent.getSolutionId())
+            .requestId(domainEvent.getRequestId())
+            .orderId(domainEvent.getOrderId())
+            .packageCount(domainEvent.getPackageCount())
+            .totalWeight(domainEvent.getTotalWeight())
+            .averageUtilization(domainEvent.getAverageUtilization())
+            .timestamp(domainEvent.occurredOn())
+            .build();
     }
     
     public static class Builder {

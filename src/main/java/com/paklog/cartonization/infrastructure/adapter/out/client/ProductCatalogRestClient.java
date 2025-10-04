@@ -4,7 +4,6 @@ import com.paklog.cartonization.application.port.out.ProductCatalogClient;
 import com.paklog.cartonization.domain.model.valueobject.*;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
-import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,7 +37,6 @@ public class ProductCatalogRestClient implements ProductCatalogClient {
     @Override
     @CircuitBreaker(name = CIRCUIT_BREAKER_NAME, fallbackMethod = "getProductInfoFallback")
     @Retry(name = CIRCUIT_BREAKER_NAME)
-    @TimeLimiter(name = CIRCUIT_BREAKER_NAME)
     @Cacheable(value = "product-by-sku", key = "#sku.value")
     public Optional<ProductInfo> getProductInfo(SKU sku) {
         try {
