@@ -1,0 +1,40 @@
+{
+  "tableName": "packingSolutions_v1",
+  "tableType": "REALTIME",
+  "segmentsConfig": {
+    "timeColumnName": "calculationTimestamp",
+    "timeType": "MILLISECONDS",
+    "retentionTimeUnit": "DAYS",
+    "retentionTimeValue": "90"
+  },
+  "tenants": {},
+  "tableIndexConfig": {
+    "loadMode": "MMAP",
+    "invertedIndexColumns": [
+      "cartonId",
+      "packedSkus"
+    ]
+  },
+  "ingestionConfig": {
+    "streamIngestionConfig": {
+      "streamConfig": {
+        "streamType": "kafka",
+        "stream.kafka.topic.name": "cartonization.events",
+        "stream.kafka.broker.list": "kafka-broker:9092",
+        "stream.kafka.consumer.type": "simple",
+        "stream.kafka.decoder.class.name": "org.apache.pinot.plugin.stream.kafka.format.json.JsonMessageDecoder",
+        "stream.kafka.decoder.prop.json.decoder.transform.groovy.function": "groovy_transform",
+        "stream.kafka.decoder.prop.json.decoder.transform.groovy.function.args": "jsonRecord"
+      }
+    },
+    "transformConfigs": [
+      {
+        "columnName": "groovy_transform",
+        "transformFunction": "Groovy(
+          '{\n             \"solutionId\": jsonRecord.get(\"data\").get(\"solutionId\"),\n             \"cartonId\": jsonRecord.get(\"data\").get(\"carton\").get(\"cartonId\"),\n             \"packedSkus\": jsonRecord.get(\"data\").get(\"packedItems\").collect{ it.get(\"sku\") },\n             \"totalPackedItems\": jsonRecord.get(\"data\").get(\"packedItems\").sum{ it.get(\"quantity\") },\n             \"utilizationPercentage\": jsonRecord.get(\"data\").get(\"utilization\"),\n             \"calculationTimestamp\": jsonRecord.get(\"timestamp\")\n           }',
+          'jsonRecord'
+        )"
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schemaName": "packingSolutions_v1",
+  "dimensionFieldSpecs": [
+    {
+      "name": "solutionId",
+      "dataType": "STRING"
+    },
+    {
+      "name": "cartonId",
+      "dataType": "STRING"
+    },
+    {
+      "name": "packedSkus",
+      "dataType": "STRING",
+      "singleValueField": false
+    }
+  ],
+  "metricFieldSpecs": [
+    {
+      "name": "totalPackedItems",
+      "dataType": "INT"
+    },
+    {
+      "name": "utilizationPercentage",
+      "dataType": "DOUBLE"
+    }
+  ],
+  "dateTimeFieldSpecs": [{
+    "name": "calculationTimestamp",
+    "dataType": "TIMESTAMP",
+    "format": "1:MILLISECONDS:EPOCH",
+    "granularity": "1:MILLISECONDS"
+  }]
+}

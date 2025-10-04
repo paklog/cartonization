@@ -1,0 +1,68 @@
+dataContractSpecification: 0.9.3
+id: packing-solution-prod-1234
+info:
+  title: Packing Solution Data Product
+  version: 1.0.0
+  owner: cartonization-team
+  description: Provides analytical data on every packing solution calculated by the cartonization service.
+servers:
+  production:
+    type: pinot
+    host: pinot-broker.paklog.net:8099
+    description: Production Apache Pinot cluster for real-time analytics.
+terms:
+  usage: >
+    This data product is intended for internal analytical use.
+    Please contact the cartonization-team for any other use case.
+  limitations: >
+    Data is available with a maximum latency of 2 minutes from the time of calculation.
+    Historical data is retained for 18 months.
+schema:
+  type: table
+  name: packingSolutions_v1
+  fields:
+    - name: solutionId
+      type: string
+      description: "Unique identifier for the packing solution."
+      required: true
+    - name: calculationTimestamp
+      type: timestamp_ltz
+      description: "Timestamp when the solution was calculated (UTC)."
+      required: true
+    - name: cartonId
+      type: string
+      description: "The ID of the carton used for the solution."
+      required: true
+    - name: totalPackedItems
+      type: integer
+      description: "Total number of individual items packed in the carton."
+      required: true
+    - name: utilizationPercentage
+      type: float
+      description: "Volume utilization of the carton (0.0 to 100.0)."
+      required: true
+    - name: packedSkus
+      type: array
+      description: "Array of distinct SKUs included in the package."
+      items:
+        type: string
+quality:
+  - type: freshness
+    interval: 2m
+  - type: completeness
+    fields:
+      - solutionId
+      - calculationTimestamp
+      - cartonId
+  - type: validity
+    field: utilizationPercentage
+    must_be_between:
+      min: 0
+      max: 100
+examples:
+  - solutionId: "sol-98765f-abcde"
+    calculationTimestamp: "2025-10-04T14:30:00Z"
+    cartonId: "BOX-LARGE-001"
+    totalPackedItems: 15
+    utilizationPercentage: 88.5
+    packedSkus: ["SKU-A", "SKU-B"]
