@@ -1,71 +1,179 @@
 # Cartonization Service
 
-A production-ready microservice for optimizing shipping carton utilization using advanced 3D bin-packing algorithms, built with Spring Boot, Kafka, MongoDB, and hexagonal architecture.
+3D bin-packing optimization engine for shipping cartons using Spring Boot, Kafka, MongoDB, and hexagonal architecture.
 
-## 🎯 Overview
+## Overview
 
-The Cartonization Service is a sophisticated optimization engine that calculates the most efficient way to pack items into shipping cartons. It uses advanced algorithms to minimize shipping costs while ensuring items fit properly and safely within available carton types.
+The Cartonization Service is responsible for optimizing shipping carton utilization through advanced 3D bin-packing algorithms. Within the Paklog fulfillment platform, this bounded context calculates the most efficient way to pack items into shipping cartons, minimizing shipping costs while ensuring proper fit and safety.
 
-### Key Features
+## Domain-Driven Design
 
-- **🧮 Advanced Algorithms**: 3D bin-packing with multiple optimization strategies
-- **🏗️ Clean Architecture**: Hexagonal architecture with clear separation of concerns
-- **📊 Real-time Metrics**: Comprehensive monitoring and performance tracking
-- **🔒 Enterprise Security**: Authentication, authorization, and secure communication
-- **⚡ High Performance**: Optimized algorithms with caching and async processing
-- **🔄 Event-Driven**: Kafka integration for reliable event publishing
-- **📈 Auto-Scaling**: Kubernetes deployment with horizontal pod autoscaling
-- **🧪 Test Coverage**: Comprehensive testing with Testcontainers
+### Bounded Context
+**Cartonization & Packing Optimization** - Manages carton definitions and calculates optimal packing solutions for fulfillment orders.
 
-## 🏛️ Architecture
+### Core Domain Model
 
-### Hexagonal Architecture (Ports & Adapters)
+#### Aggregates
+- **Carton** - Defines available shipping carton types with dimensions, weight limits, and metadata
+- **PackingSolution** - Represents the calculated optimal packing strategy for a set of items
+
+#### Entities
+- **Package** - Individual package within a packing solution
+- **ItemToPack** - Item requiring packing with its dimensions and quantity
+
+#### Value Objects
+- **DimensionSet** - Length, width, height with units
+- **Weight** - Weight value with unit
+- **SKU** - Stock keeping unit identifier
+- **CartonId** - Unique carton identifier
+- **PackingRules** - Business rules for packing constraints
+
+#### Domain Events
+- **CartonCreatedEvent** - New carton type added to system
+- **CartonUpdatedEvent** - Carton type modified
+- **CartonDeactivatedEvent** - Carton type removed from active use
+- **PackingSolutionCalculated** - Optimal packing solution computed
+
+#### Domain Services
+- **PackingAlgorithmService** - Implements 3D bin-packing algorithms
+- **BusinessRuleValidator** - Validates packing business rules
+
+### Ubiquitous Language
+- **Cartonization**: Process of determining optimal carton sizes for shipment
+- **Bin Packing**: Algorithm for fitting items into containers
+- **Packing Solution**: Calculated arrangement of items in cartons
+- **Available to Promise**: Items that can be packed and shipped
+
+## Architecture & Patterns
+
+### Hexagonal Architecture (Ports and Adapters)
 
 ```
-├── Domain Layer (Pure Business Logic)
-├── Application Layer (Use Cases & Services)
-├── Infrastructure Layer (External Dependencies)
-└── Clean separation with dependency inversion
+src/main/java/com/paklog/cartonization/
+├── domain/                           # Core business logic
+│   ├── model/
+│   │   ├── aggregate/               # Carton, PackingSolution
+│   │   ├── entity/                  # Package
+│   │   └── valueobject/             # DimensionSet, Weight, SKU
+│   ├── service/                     # Domain services
+│   └── event/                       # Domain events
+├── application/                      # Use cases & orchestration
+│   ├── port/
+│   │   ├── in/                      # Input ports (use cases)
+│   │   └── out/                     # Output ports (repositories, clients)
+│   └── service/                     # Application services
+└── infrastructure/                   # External adapters
+    ├── persistence/                 # MongoDB repositories
+    ├── messaging/                   # Kafka publishers
+    ├── web/                         # REST controllers
+    └── config/                      # Configuration
 ```
 
-### Technology Stack
+### Design Patterns & Principles
+- **Hexagonal Architecture** - Clear separation between domain and infrastructure
+- **Domain-Driven Design** - Rich domain models with business logic
+- **CQRS** - Separation of command and query responsibilities
+- **Event-Driven Architecture** - Asynchronous communication via domain events
+- **Transactional Outbox Pattern** - Reliable event publishing
+- **Repository Pattern** - Abstraction over data persistence
+- **Dependency Inversion** - Domain depends on abstractions, not implementations
+- **SOLID Principles** - Clean, maintainable, and testable code
 
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Framework** | Spring Boot 3.2.0 | Application framework |
-| **Language** | Java 17 | Runtime environment |
-| **Database** | MongoDB | Document storage |
-| **Messaging** | Apache Kafka | Event streaming |
-| **Cache** | Redis | Performance optimization |
-| **Security** | Spring Security | Authentication & authorization |
-| **Monitoring** | Micrometer + Prometheus | Observability |
-| **Container** | Docker + Kubernetes | Deployment |
-| **Build** | Gradle | Dependency management |
+## Technology Stack
 
-## 🚀 Quick Start
+### Core Framework
+- **Java 21** - Programming language
+- **Spring Boot 3.2.0** - Application framework
+- **Maven** - Build and dependency management
+
+### Data & Persistence
+- **MongoDB** - Document database for aggregates
+- **Spring Data MongoDB** - Data access layer
+- **Redis** - Caching layer for performance
+
+### Messaging & Events
+- **Apache Kafka** - Event streaming platform
+- **Spring Kafka** - Kafka integration
+- **CloudEvents** - Standardized event format
+
+### API & Documentation
+- **Spring Web MVC** - REST API framework
+- **SpringDoc OpenAPI** - API documentation
+- **Bean Validation** - Input validation
+
+### Observability
+- **Spring Boot Actuator** - Health checks and metrics
+- **Micrometer** - Metrics collection
+- **Prometheus** - Metrics aggregation
+- **Grafana** - Metrics visualization
+- **Loki** - Log aggregation
+
+### Testing
+- **JUnit 5** - Unit testing framework
+- **Testcontainers** - Integration testing with containers
+- **Mockito** - Mocking framework
+- **AssertJ** - Fluent assertions
+
+### DevOps
+- **Docker** - Containerization
+- **Docker Compose** - Local development environment
+- **Kubernetes** - Container orchestration
+
+## Standards Applied
+
+### Architectural Standards
+- ✅ Hexagonal Architecture (Ports and Adapters)
+- ✅ Domain-Driven Design tactical patterns
+- ✅ CQRS for command/query separation
+- ✅ Event-Driven Architecture
+- ✅ Microservices architecture
+- ✅ RESTful API design
+
+### Code Quality Standards
+- ✅ SOLID principles
+- ✅ Clean Code practices
+- ✅ Comprehensive unit and integration testing
+- ✅ Test-Driven Development (TDD)
+- ✅ Dependency injection
+- ✅ Immutable value objects
+
+### Event & Integration Standards
+- ✅ CloudEvents specification
+- ✅ Transactional Outbox Pattern
+- ✅ At-least-once delivery semantics
+- ✅ Event versioning strategy
+- ✅ Schema evolution support
+
+### Observability Standards
+- ✅ Structured logging (JSON)
+- ✅ Distributed tracing
+- ✅ Health check endpoints
+- ✅ Prometheus metrics exposition
+- ✅ Correlation ID propagation
+
+## Quick Start
 
 ### Prerequisites
-
-- Java 17+
+- Java 21+
+- Maven 3.8+
 - Docker & Docker Compose
-- Kubernetes cluster (optional for local development)
 
-### Local Development Setup
+### Local Development
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/paklog/cartonization-service.git
-   cd cartonization-service
+   git clone https://github.com/paklog/cartonization.git
+   cd cartonization
    ```
 
 2. **Start infrastructure services**
    ```bash
-   docker-compose up -d
+   docker-compose up -d mongodb kafka redis
    ```
 
 3. **Build and run the application**
    ```bash
-   ./gradlew bootRun
+   mvn spring-boot:run
    ```
 
 4. **Verify the service is running**
@@ -73,318 +181,99 @@ The Cartonization Service is a sophisticated optimization engine that calculates
    curl http://localhost:8080/actuator/health
    ```
 
-### API Usage
-
-#### Create a Carton
+### Using Docker Compose
 
 ```bash
-curl -X POST http://localhost:8080/api/v1/cartons \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Medium Box",
-    "dimensions": {
-      "length": {"value": 12, "unit": "INCHES"},
-      "width": {"value": 8, "unit": "INCHES"},
-      "height": {"value": 6, "unit": "INCHES"}
-    },
-    "maxWeight": {"value": 25, "unit": "POUNDS"}
-  }'
-```
-
-#### Calculate Packing Solution
-
-```bash
-curl -X POST http://localhost:8080/api/v1/packing-solutions \
-  -H "Content-Type: application/json" \
-  -H "X-Request-ID: test-123" \
-  -d '{
-    "items": [
-      {"sku": "WIDGET-001", "quantity": 2},
-      {"sku": "GADGET-002", "quantity": 1}
-    ],
-    "orderId": "ORD-123",
-    "optimizeForMinimumBoxes": true
-  }'
-```
-
-## 📚 API Documentation
-
-### Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/cartons` | Create a new carton type |
-| `GET` | `/api/v1/cartons` | List all carton types |
-| `GET` | `/api/v1/cartons/{id}` | Get carton by ID |
-| `PUT` | `/api/v1/cartons/{id}` | Update carton |
-| `DELETE` | `/api/v1/cartons/{id}` | Deactivate carton |
-| `POST` | `/api/v1/packing-solutions` | Calculate optimal packing |
-
-### Monitoring Endpoints
-
-| Endpoint | Description |
-|----------|-------------|
-| `/actuator/health` | Health check |
-| `/actuator/info` | Application information |
-| `/actuator/metrics` | Application metrics |
-| `/actuator/prometheus` | Prometheus metrics |
-| `/swagger-ui.html` | API documentation |
-
-## 🧪 Testing
-
-### Unit Tests
-
-```bash
-./gradlew test
-```
-
-### Integration Tests
-
-```bash
-./gradlew integrationTest
-```
-
-### Performance Tests
-
-```bash
-./gradlew performanceTest
-```
-
-### Test Coverage Report
-
-```bash
-./gradlew jacocoTestReport
-open build/reports/jacoco/test/html/index.html
-```
-
-## 🐳 Docker Deployment
-
-### Build Docker Image
-
-```bash
-./gradlew bootBuildImage
-```
-
-### Run with Docker Compose
-
-```bash
+# Start all services
 docker-compose up -d
+
+# View logs
+docker-compose logs -f cartonization
+
+# Stop all services
+docker-compose down
 ```
 
-### Kubernetes Deployment
+## API Documentation
+
+Once running, access the interactive API documentation:
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **OpenAPI Spec**: http://localhost:8080/v3/api-docs
+
+### Key Endpoints
+
+- `POST /api/v1/cartons` - Create new carton type
+- `GET /api/v1/cartons` - List all carton types
+- `GET /api/v1/cartons/{id}` - Get carton by ID
+- `PUT /api/v1/cartons/{id}` - Update carton type
+- `DELETE /api/v1/cartons/{id}` - Deactivate carton type
+- `POST /api/v1/packing-solutions` - Calculate optimal packing solution
+
+## Testing
 
 ```bash
-# Deploy to Kubernetes
-./deploy.sh
+# Run unit tests
+mvn test
 
-# Or deploy manually
-kubectl apply -f k8s/
+# Run integration tests
+mvn verify
+
+# Run tests with coverage
+mvn clean verify jacoco:report
+
+# View coverage report
+open target/site/jacoco/index.html
 ```
 
-## 📊 Monitoring & Observability
+## Configuration
 
-### Metrics
-
-The service exposes comprehensive metrics:
-
-- **Business Metrics**: Packing requests, success/failure rates
-- **Performance Metrics**: Algorithm execution time, memory usage
-- **System Metrics**: CPU, memory, disk usage
-- **Custom Metrics**: Carton utilization, package efficiency
-
-### Dashboards
-
-- **Grafana**: Pre-configured dashboards for monitoring
-- **Prometheus**: Metrics collection and alerting
-- **Zipkin**: Distributed tracing
-
-### Health Checks
-
-- **Liveness Probe**: Container health
-- **Readiness Probe**: Service availability
-- **Startup Probe**: Initial startup time
-
-## 🔒 Security
-
-### Current Status
-
-⚠️ **Spring Security temporarily disabled** for development purposes.
-
-All endpoints are publicly accessible. **Add authentication before production deployment.**
-
-### Production Recommendations
-
-- Add Spring Security with JWT/OAuth2
-- Use API Gateway for authentication
-- Enable TLS/SSL encryption
-- Implement secure credential management
-- Add audit logging
-
-## ⚡ Performance Optimization
-
-### Algorithm Optimization
-
-- **Best Fit Decreasing**: Minimizes number of boxes
-- **First Fit Decreasing**: Faster execution
-- **Parallel Processing**: Multi-threaded computation
-- **Caching**: Redis-based result caching
-
-### Infrastructure Optimization
-
-- **Horizontal Scaling**: Kubernetes HPA
-- **Load Balancing**: NGINX ingress
-- **Database Indexing**: Optimized MongoDB queries
-- **Connection Pooling**: Efficient resource usage
-
-## 🔄 CI/CD Pipeline
-
-### GitHub Actions Workflow
+Key configuration properties:
 
 ```yaml
-name: CI/CD Pipeline
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-      - name: Build and Test
-        run: ./gradlew build
-      - name: Build Docker Image
-        run: ./gradlew bootBuildImage
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/cartonization
+  kafka:
+    bootstrap-servers: localhost:9092
+  redis:
+    host: localhost
+    port: 6379
+
+cartonization:
+  algorithm:
+    default-strategy: BEST_FIT_DECREASING
+  cache:
+    enabled: true
+    ttl: 3600
 ```
 
-### Deployment Strategy
+## Event Integration
 
-- **Blue-Green Deployment**: Zero-downtime deployments
-- **Canary Releases**: Gradual rollout with monitoring
-- **Rollback Strategy**: Automated rollback on failures
-- **Environment Promotion**: Dev → Staging → Production
+### Published Events
+- `com.paklog.cartonization.carton.created.v1`
+- `com.paklog.cartonization.carton.updated.v1`
+- `com.paklog.cartonization.carton.deactivated.v1`
+- `com.paklog.cartonization.packing.solution.calculated.v1`
 
-## 📈 Scaling Strategy
+### Event Format
+All events follow the CloudEvents specification and are published to Kafka.
 
-### Horizontal Scaling
+## Monitoring
 
-- **Pod Autoscaling**: CPU/memory-based scaling
-- **Request-based Scaling**: HTTP request rate scaling
-- **Custom Metrics**: Business metric-based scaling
+- **Health**: http://localhost:8080/actuator/health
+- **Metrics**: http://localhost:8080/actuator/metrics
+- **Prometheus**: http://localhost:8080/actuator/prometheus
 
-### Database Scaling
+## Contributing
 
-- **MongoDB Sharding**: Horizontal data distribution
-- **Read Replicas**: Read workload distribution
-- **Connection Pooling**: Efficient connection management
+1. Follow hexagonal architecture principles
+2. Implement domain logic in the domain layer
+3. Keep infrastructure concerns separate
+4. Write comprehensive tests for all layers
+5. Document domain concepts using ubiquitous language
+6. Follow existing code style and conventions
 
-### Caching Strategy
+## License
 
-- **Redis Cluster**: Distributed caching
-- **TTL-based Expiration**: Automatic cache cleanup
-- **Cache Warming**: Pre-populated frequently used data
-
-## 🛠️ Development
-
-### Project Structure
-
-```
-cartonization-service/
-├── src/main/java/com/paklog/cartonization/
-│   ├── CartonizationApplication.java
-│   ├── domain/                    # Domain layer
-│   ├── application/               # Application layer
-│   └── infrastructure/            # Infrastructure layer
-├── src/test/                      # Test sources
-├── k8s/                          # Kubernetes manifests
-├── docker-compose.yml            # Local development
-├── Dockerfile                    # Container definition
-├── deploy.sh                     # Deployment script
-└── README.md                     # This file
-```
-
-### Development Workflow
-
-1. **Create Feature Branch**
-   ```bash
-   git checkout -b feature/new-algorithm
-   ```
-
-2. **Implement Changes**
-   ```bash
-   # Follow hexagonal architecture principles
-   # Add tests for new functionality
-   # Update documentation
-   ```
-
-3. **Run Tests**
-   ```bash
-   ./gradlew test
-   ./gradlew integrationTest
-   ```
-
-4. **Build and Deploy**
-   ```bash
-   ./gradlew build
-   ./deploy.sh
-   ```
-
-## 🤝 Contributing
-
-### Code Standards
-
-- **SOLID Principles**: Single responsibility, open/closed, etc.
-- **Clean Code**: Meaningful names, small functions, comprehensive tests
-- **Documentation**: Inline comments, API documentation
-- **Testing**: Unit tests, integration tests, performance tests
-
-### Pull Request Process
-
-1. Fork the repository
-2. Create a feature branch
-3. Implement changes with tests
-4. Ensure all tests pass
-5. Update documentation
-6. Submit pull request
-
-## 📄 License
-
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Support
-
-### Documentation
-
-- [API Documentation](http://localhost:8080/swagger-ui.html)
-- [Architecture Diagrams](architecture-diagrams.md)
-- [Implementation Plan](cartonization-implementation-plan.md)
-- [Development Setup](development-environment-setup.md)
-
-### Monitoring
-
-- **Health Checks**: `/actuator/health`
-- **Metrics**: `/actuator/prometheus`
-- **Logs**: Application logs with structured format
-
-### Troubleshooting
-
-- **Common Issues**: Check the troubleshooting section in development setup
-- **Performance Issues**: Monitor metrics and adjust scaling
-- **Deployment Issues**: Check Kubernetes events and pod logs
-
----
-
-## 🎉 Success Metrics
-
-The Cartonization Service demonstrates:
-
-- **🏆 Enterprise Architecture**: Production-ready microservice
-- **🧮 Mathematical Excellence**: Advanced optimization algorithms
-- **⚡ Performance Excellence**: Optimized for speed and scalability
-- **🔒 Security Excellence**: Enterprise-grade security features
-- **📊 Monitoring Excellence**: Comprehensive observability
-- **🧪 Testing Excellence**: Thorough test coverage
-- **🚀 Deployment Excellence**: Automated CI/CD pipeline
-
-**Ready for production deployment and immediate business value delivery!** 🚀
+Copyright © 2024 Paklog. All rights reserved.
