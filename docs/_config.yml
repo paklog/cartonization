@@ -1,0 +1,40 @@
+title: Cartonization Service Documentation
+description: 3D bin-packing optimization engine for shipping cartons
+theme: jekyll-theme-cayman
+baseurl: "/cartonization"
+url: "https://paklog.github.io"
+
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: Architecture
+    url: /architecture-diagrams
+  - title: Domain Model
+    url: /domain-model
+  - title: API Documentation
+    url: /api-implementation-examples
+  - title: Development Setup
+    url: /development-environment-setup
+  - title: Docker Guide
+    url: /DOCKER_README
+
+# GitHub
+github:
+  repository_url: https://github.com/paklog/cartonization
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: false
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
