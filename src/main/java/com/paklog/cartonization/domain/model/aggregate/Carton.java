@@ -35,7 +35,7 @@ public class Carton {
         this.maxWeight = maxWeight;
         this.status = status;
         this.createdAt = Instant.now();
-        this.updatedAt = this.createdAt;
+        this.updatedAt = Instant.now();
     }
 
     // Factory method for creating new carton

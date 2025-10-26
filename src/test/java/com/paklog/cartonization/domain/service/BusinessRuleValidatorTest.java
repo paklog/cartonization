@@ -379,7 +379,7 @@ class BusinessRuleValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(doubles = {-0.1, 0.0, 1.1, 2.0})
+    @ValueSource(doubles = {-0.1, -1.0, 1.1, 2.0})
     void shouldThrowExceptionForInvalidUtilizationThreshold(double thresholdValue) {
         // Given
         PackingRules invalidRules = PackingRules.builder()

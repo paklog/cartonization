@@ -29,10 +29,8 @@ public class HealthController {
     private final CacheWarmupService cacheWarmupService;
     private final Instant startupTime;
 
-    @Value("${spring.application.name}")
     private String applicationName;
 
-    @Value("${app.version:1.0.0}")
     private String applicationVersion;
 
     public HealthController(CacheWarmupService cacheWarmupService) {

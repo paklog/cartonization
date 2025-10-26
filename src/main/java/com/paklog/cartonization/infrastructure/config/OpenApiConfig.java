@@ -17,13 +17,10 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
-    @Value("${spring.application.name:Cartonization Service}")
     private String applicationName;
 
-    @Value("${app.version:1.0.0}")
     private String applicationVersion;
 
-    @Value("${server.port:8080}")
     private String serverPort;
 
     @Bean

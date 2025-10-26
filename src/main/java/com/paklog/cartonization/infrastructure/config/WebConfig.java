@@ -22,24 +22,24 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final CorrelationIdInterceptor correlationIdInterceptor;
 
+    @Value("${cors.allowed-origins}")
+    private List<String> allowedOrigins;
+
+    @Value("${cors.allowed-methods}")
+    private List<String> allowedMethods;
+
+    @Value("${cors.allowed-headers}")
+    private List<String> allowedHeaders;
+
+    @Value("${cors.allow-credentials}")
+    private boolean allowCredentials;
+
+    @Value("${cors.max-age}")
+    private long maxAge;
+
     public WebConfig(CorrelationIdInterceptor correlationIdInterceptor) {
         this.correlationIdInterceptor = correlationIdInterceptor;
     }
-
-    @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:8080}")
-    private List<String> allowedOrigins;
-
-    @Value("${app.cors.allowed-methods:GET,POST,PUT,DELETE,OPTIONS}")
-    private List<String> allowedMethods;
-
-    @Value("${app.cors.allowed-headers:*}")
-    private List<String> allowedHeaders;
-
-    @Value("${app.cors.allow-credentials:true}")
-    private boolean allowCredentials;
-
-    @Value("${app.cors.max-age:3600}")
-    private long maxAge;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

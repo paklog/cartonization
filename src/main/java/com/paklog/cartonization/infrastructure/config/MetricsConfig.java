@@ -24,7 +24,7 @@ public class MetricsConfig {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @Value("${app.version:1.0.0}")
+    @Value("${spring.application.version:1.0.0}")
     private String applicationVersion;
 
     @Bean

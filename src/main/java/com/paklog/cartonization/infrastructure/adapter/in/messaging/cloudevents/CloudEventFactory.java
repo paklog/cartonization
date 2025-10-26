@@ -17,8 +17,10 @@ public class CloudEventFactory {
     private final String serviceSource;
     private final String serviceVersion;
 
-    public CloudEventFactory(@Value("${spring.application.name}") String serviceName,
-                           @Value("${app.version:1.0.0}") String serviceVersion) {
+    public CloudEventFactory(
+        @Value("${spring.application.name:cartonization}") String serviceName,
+        @Value("${spring.application.version:1.0.0}") String serviceVersion
+    ) {
         this.serviceSource = "//paklog.com/services/" + serviceName;
         this.serviceVersion = serviceVersion;
     }

@@ -28,8 +28,10 @@ public class ProductCatalogRestClient implements ProductCatalogClient {
     private final RestTemplate restTemplate;
     private final String baseUrl;
 
-    public ProductCatalogRestClient(RestTemplate restTemplate, 
-                                  @Value("${integration.product-catalog.base-url}") String baseUrl) {
+    public ProductCatalogRestClient(
+        RestTemplate restTemplate,
+        @Value("${product-catalog.url:http://localhost:8081}") String baseUrl
+    ) {
         this.restTemplate = restTemplate;
         this.baseUrl = baseUrl;
     }

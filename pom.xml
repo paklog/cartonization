@@ -25,9 +25,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
-        <testcontainers.version>1.19.8</testcontainers.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <loki-logback-appender.version>1.5.1</loki-logback-appender.version>
+        <testcontainers.version>1.19.8</testcontainers.version>        <loki-logback-appender.version>1.5.1</loki-logback-appender.version>
     </properties>
 
     <repositories>
@@ -115,11 +113,7 @@
         </dependency>
 
         <!-- Utilities -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${mapstruct.version}</version>
-        </dependency>
+        
 
         <!-- Circuit Breaker and Resilience -->
         <dependency>
@@ -240,13 +234,7 @@
                 <version>3.13.0</version>
                 <configuration>
                     <release>21</release>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
+                    
                 </configuration>
             </plugin>
 

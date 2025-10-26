@@ -31,31 +31,31 @@ public class RedisConfig {
 
     private static final Logger log = LoggerFactory.getLogger(RedisConfig.class);
 
-    @Value("${spring.data.redis.host:localhost}")
+    @Value("${spring.redis.host}")
     private String redisHost;
 
-    @Value("${spring.data.redis.port:6379}")
+    @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.password:}")
+    @Value("${spring.redis.password:}")
     private String redisPassword;
 
-    @Value("${spring.data.redis.database:0}")
+    @Value("${spring.redis.database}")
     private int redisDatabase;
 
-    @Value("${spring.data.redis.timeout:2000ms}")
+    @Value("${spring.redis.timeout}")
     private Duration commandTimeout;
 
-    @Value("${app.cache.default-ttl:PT30M}")
+    @Value("${app.redis.cache.default-ttl}")
     private Duration defaultTtl;
 
-    @Value("${app.cache.carton-ttl:PT60M}")
+    @Value("${app.redis.cache.carton-ttl}")
     private Duration cartonTtl;
 
-    @Value("${app.cache.product-ttl:PT15M}")
+    @Value("${app.redis.cache.product-ttl}")
     private Duration productTtl;
 
-    @Value("${app.cache.packing-solution-ttl:PT10M}")
+    @Value("${app.redis.cache.packing-solution-ttl}")
     private Duration packingSolutionTtl;
 
     @Bean

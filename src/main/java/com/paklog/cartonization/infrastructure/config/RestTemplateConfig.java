@@ -26,16 +26,16 @@ public class RestTemplateConfig {
 
     private static final Logger log = LoggerFactory.getLogger(RestTemplateConfig.class);
 
-    @Value("${integration.rest.connect-timeout:5000}")
+    @Value("${app.rest.connect-timeout}")
     private int connectTimeout;
 
-    @Value("${integration.rest.read-timeout:30000}")
+    @Value("${app.rest.read-timeout}")
     private int readTimeout;
 
-    @Value("${integration.rest.max-connections:20}")
+    @Value("${app.rest.max-connections}")
     private int maxConnections;
 
-    @Value("${integration.rest.logging.enabled:true}")
+    @Value("${app.rest.logging-enabled}")
     private boolean loggingEnabled;
 
     @Bean

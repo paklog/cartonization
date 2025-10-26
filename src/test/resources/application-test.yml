@@ -51,3 +51,59 @@ management:
     web:
       exposure:
         include: health,info
+
+# Application configuration for tests
+app:
+  rest:
+    connect-timeout: 5000
+    read-timeout: 10000
+    max-connections: 100
+    logging-enabled: false
+  async:
+    core-pool-size: 2
+    max-pool-size: 5
+    queue-capacity: 50
+    keep-alive-seconds: 30
+    thread-name-prefix: "test-async-"
+  scheduling:
+    pool-size: 2
+    thread-name-prefix: "test-scheduled-"
+  redis:
+    cache:
+      default-ttl: 60s
+      carton-ttl: 120s
+      product-ttl: 180s
+      packing-solution-ttl: 90s
+  kafka:
+    consumer:
+      group-id: cartonization-service-test
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      session-timeout-ms: 30000
+      heartbeat-interval-ms: 10000
+      max-poll-records: 500
+      max-poll-interval-ms: 300000
+      concurrency: 1
+    producer:
+      acks: all
+      retries: 1
+      batch-size: 1024
+      linger-ms: 0
+      buffer-memory: 33554432
+      compression-type: none
+      request-timeout-ms: 5000
+      delivery-timeout-ms: 10000
+
+# CORS configuration for tests
+cors:
+  allowed-origins:
+    - http://localhost:3000
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+  allowed-headers:
+    - "*"
+  allow-credentials: false
+  max-age: 3600

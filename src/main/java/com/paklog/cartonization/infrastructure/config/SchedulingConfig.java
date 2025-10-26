@@ -15,10 +15,10 @@ public class SchedulingConfig {
 
     private static final Logger log = LoggerFactory.getLogger(SchedulingConfig.class);
 
-    @Value("${app.scheduling.pool-size:5}")
+    @Value("${app.scheduling.pool-size}")
     private int poolSize;
 
-    @Value("${app.scheduling.thread-name-prefix:scheduling-}")
+    @Value("${app.scheduling.thread-name-prefix}")
     private String threadNamePrefix;
 
     @Bean

@@ -13,6 +13,8 @@ spring:
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: ${REDIS_DATABASE:0}
     timeout: 2000ms
     lettuce:
       pool:
@@ -31,14 +33,34 @@ spring:
       cache-null-values: false
 
 app:
+  rest:
+    connect-timeout: 5000
+    read-timeout: 10000
+    max-connections: 100
+    logging-enabled: true
+  async:
+    core-pool-size: 5
+    max-pool-size: 20
+    queue-capacity: 100
+    keep-alive-seconds: 60
+    thread-name-prefix: "async-task-"
+  scheduling:
+    pool-size: 5
+    thread-name-prefix: "scheduled-task-"
+  redis:
+    cache:
+      default-ttl: 600s
+      carton-ttl: 1800s
+      product-ttl: 3600s
+      packing-solution-ttl: 900s
   kafka:
     topics:
-      cartonization-requests: cartonization.requests
-      cartonization-responses: cartonization.responses
-      cartonization-solutions: cartonization.solutions
-      cartonization-events: cartonization.events
-      carton-management-requests: carton.management.requests
-      cartonization-requests-dlq: cartonization.requests.dlq
+      cartonization-requests: order-fulfillment-core.cartonization.requests
+      cartonization-responses: order-fulfillment-core.cartonization.responses
+      cartonization-solutions: order-fulfillment-core.cartonization.solutions
+      cartonization-events: order-fulfillment-core.cartonization.events
+      carton-management-requests: order-fulfillment-core.cartonization.management-requests
+      cartonization-requests-dlq: order-fulfillment-core.cartonization.requests.dlq
     consumer:
       group-id: ${KAFKA_CONSUMER_GROUP_ID:cartonization-service}
       auto-offset-reset: earliest
@@ -48,6 +70,15 @@ app:
       max-poll-records: 500
       max-poll-interval-ms: 300000
       concurrency: 3
+    producer:
+      acks: all
+      retries: 3
+      batch-size: 16384
+      linger-ms: 10
+      buffer-memory: 33554432
+      compression-type: snappy
+      request-timeout-ms: 30000
+      delivery-timeout-ms: 120000
   cache:
     warmup:
       enabled: true
@@ -142,6 +173,22 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+
+cors:
+  allowed-origins:
+    - http://localhost:3000
+    - http://localhost:8080
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - PATCH
+    - OPTIONS
+  allowed-headers:
+    - "*"
+  allow-credentials: true
+  max-age: 3600
 
 springdoc:
   api-docs:

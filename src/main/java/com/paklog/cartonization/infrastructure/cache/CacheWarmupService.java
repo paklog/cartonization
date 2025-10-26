@@ -25,10 +25,8 @@ public class CacheWarmupService {
     private final ProductCatalogClient productCatalogClient;
     private final CacheService cacheService;
     
-    @Value("${app.cache.warmup.enabled:true}")
     private boolean warmupEnabled;
     
-    @Value("${app.cache.warmup.common-skus:PROD001,PROD002,PROD003}")
     private List<String> commonSkus;
 
     public CacheWarmupService(CartonRepository cartonRepository,

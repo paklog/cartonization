@@ -30,25 +30,25 @@ public class KafkaConsumerConfig {
     @Value("${app.kafka.consumer.group-id}")
     private String groupId;
 
-    @Value("${app.kafka.consumer.auto-offset-reset:earliest}")
+    @Value("${app.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
 
-    @Value("${app.kafka.consumer.enable-auto-commit:false}")
+    @Value("${app.kafka.consumer.enable-auto-commit}")
     private boolean enableAutoCommit;
 
-    @Value("${app.kafka.consumer.session-timeout-ms:30000}")
+    @Value("${app.kafka.consumer.session-timeout-ms}")
     private int sessionTimeoutMs;
 
-    @Value("${app.kafka.consumer.heartbeat-interval-ms:10000}")
+    @Value("${app.kafka.consumer.heartbeat-interval-ms}")
     private int heartbeatIntervalMs;
 
-    @Value("${app.kafka.consumer.max-poll-records:500}")
+    @Value("${app.kafka.consumer.max-poll-records}")
     private int maxPollRecords;
 
-    @Value("${app.kafka.consumer.max-poll-interval-ms:300000}")
+    @Value("${app.kafka.consumer.max-poll-interval-ms}")
     private int maxPollIntervalMs;
 
-    @Value("${app.kafka.consumer.concurrency:3}")
+    @Value("${app.kafka.consumer.concurrency}")
     private int concurrency;
 
 

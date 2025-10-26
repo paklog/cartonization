@@ -1,71 +1,87 @@
-# Multi-stage build for Cartonization Service
+# ============================================
+# Multi-stage Dockerfile for Cartonization Service
+# Best Practices: Multi-stage build, non-root user, layer caching, security hardening
+# ============================================
+
+# ============================================
+# Stage 1: Build Stage
+# ============================================
 FROM eclipse-temurin:21-jdk-alpine AS builder
+
+# Set build arguments
+ARG APP_VERSION=1.0.0-SNAPSHOT
+ARG BUILD_DATE
+ARG VCS_REF
 
 # Install Maven
 RUN apk add --no-cache maven
 
 # Set working directory
-WORKDIR /app
+WORKDIR /build
 
-# Copy pom.xml for dependency caching
-COPY pom.xml ./
+# Copy Maven files for dependency caching
+COPY pom.xml .
+COPY .mvn .mvn
 
-# Download dependencies (this layer will be cached unless pom.xml changes)
-RUN mvn dependency:go-offline
+# Download dependencies (cached layer)
+RUN mvn dependency:go-offline -B || true
 
-# Copy source code
+# Copy application source
 COPY src ./src
 
-# Build the application (skip tests in Docker build for faster builds)
-RUN mvn clean package -DskipTests
+# Build the application
+RUN mvn clean package -DskipTests -B && \
+    mv target/*.jar target/app.jar
 
-# Runtime stage
-FROM eclipse-temurin:21-jre-alpine AS runtime
+# ============================================
+# Stage 2: Runtime Stage
+# ============================================
+FROM eclipse-temurin:21-jre-alpine
 
-# Add metadata
-LABEL maintainer="Paklog Team"
-LABEL description="Cartonization Service - Intelligent packing solution calculator"
-LABEL version="1.0.0"
+# Metadata labels (OCI standard)
+LABEL org.opencontainers.image.title="Cartonization Service" \
+      org.opencontainers.image.description="3D bin-packing optimization engine for shipping cartons" \
+      org.opencontainers.image.version="${APP_VERSION}" \
+      org.opencontainers.image.vendor="Paklog" \
+      org.opencontainers.image.authors="Paklog Engineering Team" \
+      org.opencontainers.image.source="https://github.com/paklog/cartonization" \
+      com.paklog.service.tier="core" \
+      com.paklog.service.phase="1"
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S appgroup && \
-    adduser -u 1001 -S appuser -G appgroup
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
+
+# Create non-root user and group
+RUN addgroup -S spring && adduser -S spring -G spring
 
 # Set working directory
 WORKDIR /app
 
-# Install required packages and clean up
-RUN apk add --no-cache \
-    curl \
-    tzdata \
-    && rm -rf /var/cache/apk/*
-
-# Set timezone (can be overridden with environment variable)
-ENV TZ=UTC
-
-# Copy the built JAR from builder stage
-COPY --from=builder /app/target/cartonization-*.jar app.jar
-
-# Change ownership of the app directory
-RUN chown -R appuser:appgroup /app
+# Copy JAR from builder
+COPY --from=builder --chown=spring:spring /build/target/app.jar app.jar
 
 # Switch to non-root user
-USER appuser
+USER spring:spring
 
-# Expose the application port
+# Expose application port
 EXPOSE 8080
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8080/api/v1/health || exit 1
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 
-# JVM optimization for containers
+# JVM options optimized for containers
 ENV JAVA_OPTS="-XX:+UseContainerSupport \
-    -XX:MaxRAMPercentage=75.0 \
-    -XX:+UseG1GC \
-    -XX:+UseStringDeduplication \
-    -Djava.security.egd=file:/dev/./urandom \
-    -Dspring.profiles.active=docker"
+               -XX:MaxRAMPercentage=75.0 \
+               -XX:InitialRAMPercentage=50.0 \
+               -XX:+UseG1GC \
+               -XX:+UseStringDeduplication \
+               -XX:+OptimizeStringConcat \
+               -Djava.security.egd=file:/dev/./urandom \
+               -Dspring.backgroundpreinitializer.ignore=true"
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # Run the application
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

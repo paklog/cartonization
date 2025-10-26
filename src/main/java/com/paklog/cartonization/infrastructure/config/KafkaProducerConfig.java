@@ -24,28 +24,28 @@ public class KafkaProducerConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    @Value("${app.kafka.producer.retries:3}")
+    @Value("${app.kafka.producer.retries}")
     private int retries;
 
-    @Value("${app.kafka.producer.batch-size:16384}")
+    @Value("${app.kafka.producer.batch-size}")
     private int batchSize;
 
-    @Value("${app.kafka.producer.linger-ms:5}")
+    @Value("${app.kafka.producer.linger-ms}")
     private int lingerMs;
 
-    @Value("${app.kafka.producer.buffer-memory:33554432}")
+    @Value("${app.kafka.producer.buffer-memory}")
     private long bufferMemory;
 
-    @Value("${app.kafka.producer.compression-type:snappy}")
+    @Value("${app.kafka.producer.compression-type}")
     private String compressionType;
 
-    @Value("${app.kafka.producer.acks:all}")
+    @Value("${app.kafka.producer.acks}")
     private String acks;
 
-    @Value("${app.kafka.producer.request-timeout-ms:30000}")
+    @Value("${app.kafka.producer.request-timeout-ms}")
     private int requestTimeoutMs;
 
-    @Value("${app.kafka.producer.delivery-timeout-ms:120000}")
+    @Value("${app.kafka.producer.delivery-timeout-ms}")
     private int deliveryTimeoutMs;
 
     @Bean

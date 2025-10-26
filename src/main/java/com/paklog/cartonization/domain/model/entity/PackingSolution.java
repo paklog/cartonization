@@ -17,9 +17,10 @@ public class PackingSolution {
 
     private PackingSolution(String solutionId, List<Package> packages) {
         this.solutionId = solutionId;
-        this.packages = new ArrayList<>(packages);
+        this.packages = packages;
         this.createdAt = Instant.now();
     }
+
 
     public static PackingSolution create(List<Package> packages) {
         String solutionId = "sol-" + UUID.randomUUID().toString().substring(0, 12);

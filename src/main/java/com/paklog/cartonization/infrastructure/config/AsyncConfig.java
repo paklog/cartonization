@@ -20,19 +20,19 @@ public class AsyncConfig implements AsyncConfigurer {
 
     private static final Logger log = LoggerFactory.getLogger(AsyncConfig.class);
 
-    @Value("${app.async.core-pool-size:5}")
+    @Value("${app.async.core-pool-size}")
     private int corePoolSize;
 
-    @Value("${app.async.max-pool-size:20}")
+    @Value("${app.async.max-pool-size}")
     private int maxPoolSize;
 
-    @Value("${app.async.queue-capacity:100}")
+    @Value("${app.async.queue-capacity}")
     private int queueCapacity;
 
-    @Value("${app.async.keep-alive-seconds:60}")
+    @Value("${app.async.keep-alive-seconds}")
     private int keepAliveSeconds;
 
-    @Value("${app.async.thread-name-prefix:async-}")
+    @Value("${app.async.thread-name-prefix}")
     private String threadNamePrefix;
 
     @Override
